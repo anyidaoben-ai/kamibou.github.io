@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>食事場 — テクノロジーで、もっと笑顔に。</title>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Kaku+Gothic+New:wght@400;700;900&family=DM+Serif+Display:ital@0;1&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #FDF6EE;
+    --warm-white: #FFFAF5;
+    --peach: #F4A96A;
+    --peach-light: #FAD9BB;
+    --peach-pale: #FEF0E3;
+    --coral: #E8734A;
+    --coral-deep: #C75A32;
+    --sand: #E8D5B7;
+    --sand-deep: #C4A882;
+    --brown: #5C3D2E;
+    --brown-mid: #8B5E3C;
+    --text: #2D1F14;
+    --text-mid: #6B4C35;
+    --text-soft: #A07850;
+    --green-accent: #6BAA74;
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 28px;
+    --radius-xl: 48px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Nunito', 'Zen Kaku Gothic New', sans-serif;
+    background: var(--cream);
+    color: var(--text);
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 48px;
+    background: rgba(253,246,238,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(196,168,130,0.25);
+  }
+  .nav-logo {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Serif Display', serif;
+    font-size: 22px; color: var(--coral-deep); text-decoration: none;
+  }
+  .logo-dot {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--peach);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .nav-links { display: flex; align-items: center; gap: 32px; }
+  .nav-links a {
+    font-size: 14px; font-weight: 600; color: var(--text-mid);
+    text-decoration: none; transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--coral); }
+  .nav-cta {
+    background: var(--coral); color: #fff !important;
+    padding: 8px 22px; border-radius: var(--radius-xl);
+    transition: background 0.2s, transform 0.15s !important;
+  }
+  .nav-cta:hover { background: var(--coral-deep) !important; transform: translateY(-1px); }
+
+  /* ── HERO ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding: 120px 48px 80px;
+    position: relative; overflow: hidden;
+  }
+  .hero-bg-blob {
+    position: absolute; border-radius: 50%;
+    background: var(--peach-pale); opacity: 0.7;
+  }
+  .blob1 { width: 520px; height: 520px; top: -80px; right: -100px; }
+  .blob2 { width: 320px; height: 320px; bottom: 40px; left: -80px; background: var(--sand) !important; opacity: 0.5 !important; }
+  .blob3 { width: 180px; height: 180px; top: 200px; right: 380px; opacity: 0.4 !important; }
+
+  .hero-content { position: relative; z-index: 2; max-width: 640px; }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--peach-pale); border: 1px solid var(--sand);
+    padding: 6px 16px; border-radius: var(--radius-xl);
+    font-size: 13px; font-weight: 700; color: var(--brown-mid);
+    margin-bottom: 28px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .badge-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-accent); }
+
+  .hero h1 {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: clamp(38px, 5.5vw, 62px);
+    font-weight: 900; line-height: 1.2;
+    color: var(--text);
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+  .hero h1 .accent { color: var(--coral); }
+  .hero h1 .serif-touch {
+    font-family: 'DM Serif Display', serif;
+    font-style: italic; color: var(--coral-deep);
+  }
+
+  .hero-sub {
+    font-size: 17px; color: var(--text-mid); margin: 20px 0 36px;
+    max-width: 500px;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-actions {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.3s ease both;
+  }
+  .btn-primary {
+    background: var(--coral); color: #fff;
+    padding: 14px 32px; border-radius: var(--radius-xl);
+    font-size: 15px; font-weight: 700; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    box-shadow: 0 4px 20px rgba(232,115,74,0.35);
+  }
+  .btn-primary:hover { background: var(--coral-deep); transform: translateY(-2px); }
+  .btn-secondary {
+    color: var(--coral-deep); font-size: 15px; font-weight: 700;
+    text-decoration: none; display: flex; align-items: center; gap: 6px;
+    transition: gap 0.2s;
+  }
+  .btn-secondary:hover { gap: 10px; }
+
+  .hero-visual {
+    position: absolute; right: 48px; top: 50%; transform: translateY(-50%);
+    width: 460px; z-index: 1;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+  .hero-card-float {
+    background: var(--warm-white);
+    border: 1px solid var(--sand);
+    border-radius: var(--radius-lg);
+    padding: 28px;
+    position: relative;
+  }
+  .hc-header {
+    display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+  }
+  .hc-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--peach); display: flex; align-items: center;
+    justify-content: center; font-size: 18px;
+  }
+  .hc-name { font-weight: 700; font-size: 14px; }
+  .hc-role { font-size: 12px; color: var(--text-soft); }
+  .hc-stats {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px;
+    margin-bottom: 20px;
+  }
+  .hc-stat {
+    background: var(--peach-pale); border-radius: var(--radius-md);
+    padding: 14px 12px; text-align: center;
+  }
+  .hc-stat-num { font-size: 22px; font-weight: 900; color: var(--coral-deep); }
+  .hc-stat-label { font-size: 11px; color: var(--text-soft); margin-top: 2px; }
+  .hc-bar-label { font-size: 12px; color: var(--text-mid); margin-bottom: 6px; font-weight: 600; }
+  .hc-bar-track {
+    background: var(--sand); border-radius: 99px; height: 8px; margin-bottom: 10px;
+  }
+  .hc-bar-fill {
+    height: 8px; border-radius: 99px; background: var(--coral);
+    transition: width 1s ease;
+  }
+  .hc-tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 14px; }
+  .hc-tag {
+    background: var(--peach-pale); border: 1px solid var(--sand);
+    border-radius: 99px; padding: 4px 12px;
+    font-size: 11px; font-weight: 600; color: var(--brown-mid);
+  }
+  .float-badge {
+    position: absolute;
+    background: #fff; border: 1px solid var(--sand);
+    border-radius: var(--radius-md); padding: 10px 14px;
+    font-size: 12px; font-weight: 700;
+    box-shadow: 0 4px 16px rgba(92,61,46,0.1);
+  }
+  .float-badge.fb1 { top: -18px; right: 24px; color: var(--green-accent); }
+  .float-badge.fb2 { bottom: -16px; left: 24px; color: var(--coral-deep); }
+
+  /* ── TRUST BAR ── */
+  .trust-bar {
+    background: var(--warm-white);
+    border-top: 1px solid var(--sand); border-bottom: 1px solid var(--sand);
+    padding: 28px 48px;
+    display: flex; align-items: center; justify-content: center;
+    gap: 48px; flex-wrap: wrap;
+  }
+  .trust-label { font-size: 13px; color: var(--text-soft); font-weight: 600; }
+  .trust-stat { text-align: center; }
+  .trust-stat-num { font-size: 26px; font-weight: 900; color: var(--coral-deep); }
+  .trust-stat-label { font-size: 12px; color: var(--text-soft); }
+  .trust-divider { width: 1px; height: 36px; background: var(--sand); }
+
+  /* ── SECTION COMMONS ── */
+  section { padding: 96px 48px; }
+  .section-tag {
+    display: inline-block;
+    background: var(--peach-pale); color: var(--brown-mid);
+    font-size: 12px; font-weight: 700; padding: 4px 14px;
+    border-radius: 99px; border: 1px solid var(--sand);
+    margin-bottom: 16px; letter-spacing: 0.05em;
+  }
+  .section-title {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    font-size: clamp(26px, 3.5vw, 40px); font-weight: 900;
+    line-height: 1.25; margin-bottom: 16px;
+  }
+  .section-sub { font-size: 16px; color: var(--text-mid); max-width: 520px; }
+
+  /* ── SERVICES ── */
+  .services { background: var(--warm-white); }
+  .services-header { text-align: center; margin-bottom: 56px; }
+  .services-header .section-sub { margin: 0 auto; }
+  .services-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  .service-card {
+    background: var(--cream); border: 1px solid var(--sand);
+    border-radius: var(--radius-lg); padding: 32px;
+    transition: transform 0.25s, box-shadow 0.25s;
+    cursor: default;
+  }
+  .service-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(92,61,46,0.12); }
+  .service-icon {
+    width: 52px; height: 52px; border-radius: var(--radius-md);
+    background: var(--peach-pale); display: flex; align-items: center;
+    justify-content: center; font-size: 24px; margin-bottom: 20px;
+  }
+  .service-card h3 { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .service-card p { font-size: 14px; color: var(--text-mid); line-height: 1.65; }
+  .service-link {
+    display: inline-flex; align-items: center; gap: 4px;
+    margin-top: 18px; font-size: 13px; font-weight: 700;
+    color: var(--coral); text-decoration: none; transition: gap 0.2s;
+  }
+  .service-link:hover { gap: 8px; }
+
+  /* ── TESTIMONIALS ── */
+  .testimonials { background: var(--cream); }
+  .testimonials-header { text-align: center; margin-bottom: 52px; }
+  .testimonials-header .section-sub { margin: 0 auto; }
+  .testimonials-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; max-width: 1100px; margin: 0 auto;
+  }
+  .testimonial-card {
+    background: var(--warm-white); border: 1px solid var(--sand);
+    border-radius: var(--radius-lg); padding: 28px;
+  }
+  .stars { color: var(--peach); font-size: 16px; margin-bottom: 14px; }
+  .testimonial-card p { font-size: 14px; color: var(--text-mid); line-height: 1.7; margin-bottom: 20px; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+  .t-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: var(--peach-light); display: flex; align-items: center;
+    justify-content: center; font-size: 16px; font-weight: 700; color: var(--coral-deep);
+  }
+  .t-name { font-size: 14px; font-weight: 700; }
+  .t-company { font-size: 12px; color: var(--text-soft); }
+
+  /* ── NEWS ── */
+  .news { background: var(--warm-white); }
+  .news-inner { max-width: 800px; margin: 0 auto; }
+  .news-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 36px; }
+  .news-list { display: flex; flex-direction: column; gap: 0; }
+  .news-item {
+    display: flex; align-items: flex-start; gap: 20px;
+    padding: 20px 0; border-bottom: 1px solid var(--sand);
+    text-decoration: none; color: inherit;
+    transition: background 0.15s;
+  }
+  .news-item:first-child { border-top: 1px solid var(--sand); }
+  .news-date { font-size: 12px; color: var(--text-soft); min-width: 88px; padding-top: 2px; font-weight: 600; }
+  .news-tag-pill {
+    font-size: 11px; font-weight: 700; padding: 3px 10px;
+    border-radius: 99px; min-width: 60px; text-align: center;
+  }
+  .pill-news { background: var(--peach-pale); color: var(--brown-mid); border: 1px solid var(--sand); }
+  .pill-event { background: #EAF5EC; color: #3B7A43; border: 1px solid #B5DABC; }
+  .pill-pr { background: #EEF2FF; color: #4050B5; border: 1px solid #C5CDFB; }
+  .news-title { font-size: 14px; font-weight: 600; color: var(--text); flex: 1; }
+  .news-title:hover { color: var(--coral); }
+  .news-more {
+    font-size: 13px; font-weight: 700; color: var(--coral); text-decoration: none;
+  }
+  .news-more:hover { text-decoration: underline; }
+
+  /* ── CTA ── */
+  .cta-section {
+    background: var(--coral); text-align: center;
+    padding: 96px 48px;
+  }
+  .cta-section .section-title { color: #fff; }
+  .cta-section p { color: rgba(255,255,255,0.85); font-size: 17px; margin-bottom: 40px; }
+  .cta-actions { display: flex; justify-content: center; align-items: center; gap: 20px; flex-wrap: wrap; }
+  .btn-white {
+    background: #fff; color: var(--coral-deep);
+    padding: 14px 34px; border-radius: var(--radius-xl);
+    font-size: 15px; font-weight: 700; text-decoration: none;
+    transition: transform 0.15s, box-shadow 0.15s;
+  }
+  .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.15); }
+  .btn-outline-white {
+    border: 2px solid rgba(255,255,255,0.6); color: #fff;
+    padding: 12px 28px; border-radius: var(--radius-xl);
+    font-size: 15px; font-weight: 700; text-decoration: none;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .btn-outline-white:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+
+  /* ── FOOTER ── */
+  footer {
+    background: var(--brown); color: rgba(255,255,255,0.8);
+    padding: 56px 48px 32px;
+  }
+  .footer-grid {
+    display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px; margin-bottom: 48px;
+  }
+  .footer-brand .nav-logo { color: var(--peach-light); margin-bottom: 14px; display: inline-flex; }
+  .footer-brand p { font-size: 13px; line-height: 1.7; color: rgba(255,255,255,0.6); }
+  .footer-col h4 { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 16px; }
+  .footer-col a {
+    display: block; font-size: 13px; color: rgba(255,255,255,0.6);
+    text-decoration: none; margin-bottom: 10px; transition: color 0.2s;
+  }
+  .footer-col a:hover { color: var(--peach-light); }
+  .footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.12);
+    padding-top: 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 12px;
+    font-size: 12px; color: rgba(255,255,255,0.4);
+  }
+  .footer-bottom-links { display: flex; gap: 20px; }
+  .footer-bottom-links a { color: rgba(255,255,255,0.4); text-decoration: none; }
+  .footer-bottom-links a:hover { color: rgba(255,255,255,0.7); }
+
+  /* ── PRICING ── */
+  .pricing-section { background: var(--cream); }
+  .pricing-header { text-align: center; margin-bottom: 52px; }
+  .pricing-header .section-sub { margin: 0 auto; }
+  .pricing-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; max-width: 1100px; margin: 0 auto 28px;
+    align-items: start;
+  }
+  .pricing-card {
+    background: var(--warm-white); border: 1px solid var(--sand);
+    border-radius: var(--radius-lg); padding: 32px;
+    position: relative;
+    transition: transform 0.25s, box-shadow 0.25s;
+  }
+  .pricing-card:hover { transform: translateY(-4px); box-shadow: 0 14px 36px rgba(92,61,46,0.1); }
+  .pricing-card-featured {
+    background: var(--coral); border-color: var(--coral);
+    transform: translateY(-8px);
+    box-shadow: 0 20px 48px rgba(232,115,74,0.35);
+  }
+  .pricing-card-featured:hover { transform: translateY(-14px); }
+  .pricing-popular-badge {
+    position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+    background: var(--brown); color: #fff;
+    font-size: 12px; font-weight: 700; padding: 5px 18px;
+    border-radius: 99px; white-space: nowrap;
+  }
+  .pricing-badge {
+    display: inline-block;
+    background: var(--peach-pale); color: var(--brown-mid);
+    font-size: 11px; font-weight: 700; padding: 3px 12px;
+    border-radius: 99px; border: 1px solid var(--sand);
+    margin-bottom: 16px;
+  }
+  .pricing-icon {
+    width: 48px; height: 48px; border-radius: var(--radius-md);
+    background: var(--peach-pale); display: flex; align-items: center;
+    justify-content: center; font-size: 22px; margin-bottom: 16px;
+  }
+  .pricing-name { font-size: 20px; font-weight: 700; margin-bottom: 10px; }
+  .pricing-desc { font-size: 13px; color: var(--text-mid); line-height: 1.65; margin-bottom: 20px; }
+  .pricing-price { margin-bottom: 22px; padding-bottom: 22px; border-bottom: 1px solid var(--sand); }
+  .pricing-card-featured .pricing-price { border-bottom-color: rgba(255,255,255,0.25); }
+  .price-num { font-size: 36px; font-weight: 900; color: var(--coral-deep); font-family: 'Nunito', sans-serif; }
+  .pricing-card-featured .price-num { color: #fff; }
+  .price-unit { font-size: 14px; color: var(--text-soft); margin-left: 4px; }
+  .pricing-features { list-style: none; margin-bottom: 24px; }
+  .pricing-features li { font-size: 13px; color: var(--text-mid); padding: 6px 0; border-bottom: 1px solid var(--sand); }
+  .pricing-features li:last-child { border-bottom: none; }
+  .pricing-card-featured .pricing-features li { border-bottom-color: rgba(255,255,255,0.2); }
+  .pricing-btn {
+    display: block; text-align: center;
+    background: var(--coral); color: #fff;
+    padding: 13px 24px; border-radius: var(--radius-xl);
+    font-size: 14px; font-weight: 700; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .pricing-btn:hover { background: var(--coral-deep); transform: translateY(-1px); }
+  .pricing-note {
+    text-align: center; font-size: 12px; color: var(--text-soft);
+    max-width: 600px; margin: 0 auto;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 768px) {
+    nav { padding: 14px 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 60px; flex-direction: column; }
+    .hero-visual { position: static; width: 100%; transform: none; margin-top: 40px; }
+    section { padding: 64px 20px; }
+    .trust-bar { padding: 24px 20px; gap: 24px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">
+    <div class="logo-dot">🌸</div>
+    食事場
+  </a>
+  <div class="nav-links">
+    <a href="#services">サービス</a>
+    <a href="#testimonials">実績</a>
+    <a href="#news">お知らせ</a>
+    <a href="#contact" class="nav-cta">お問い合わせ</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div class="hero-bg-blob blob1"></div>
+  <div class="hero-bg-blob blob2"></div>
+  <div class="hero-bg-blob blob3"></div>
+
+  <div class="hero-content">
+    <div class="hero-badge">
+      <span class="badge-dot"></span>
+      札幌発 · 全国対応のIT会社
+    </div>
+    <h1>
+      テクノロジーで、<br>
+      もっと<span class="accent">笑顔</span>に。<br>
+      <span class="serif-touch">Together.</span>
+    </h1>
+    <p class="hero-sub">
+      中小企業のデジタル化を、やさしく・着実に支援します。<br>
+      Webサイト制作からシステム開発まで、伴走型でサポート。
+    </p>
+    <div class="hero-actions">
+      <a href="#contact" class="btn-primary">無料相談を予約する →</a>
+      <a href="#services" class="btn-secondary">サービスを見る ›</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-card-float">
+      <div class="float-badge fb1">✓ 導入完了！</div>
+      <div class="hc-header">
+        <div class="hc-avatar">🏢</div>
+        <div>
+          <div class="hc-name">株式会社さくら食品</div>
+          <div class="hc-role">Web制作 · ECサイト</div>
+        </div>
+      </div>
+      <div class="hc-stats">
+        <div class="hc-stat">
+          <div class="hc-stat-num">+142%</div>
+          <div class="hc-stat-label">アクセス</div>
+        </div>
+        <div class="hc-stat">
+          <div class="hc-stat-num">+58%</div>
+          <div class="hc-stat-label">売上</div>
+        </div>
+        <div class="hc-stat">
+          <div class="hc-stat-num">4.9</div>
+          <div class="hc-stat-label">満足度</div>
+        </div>
+      </div>
+      <div class="hc-bar-label">プロジェクト進捗</div>
+      <div class="hc-bar-track"><div class="hc-bar-fill" style="width:88%"></div></div>
+      <div class="hc-bar-label">お客様満足度</div>
+      <div class="hc-bar-track"><div class="hc-bar-fill" style="width:97%; background:#6BAA74;"></div></div>
+      <div class="hc-tag-row">
+        <span class="hc-tag">WordPress</span>
+        <span class="hc-tag">EC構築</span>
+        <span class="hc-tag">SEO対策</span>
+        <span class="hc-tag">保守対応</span>
+      </div>
+      <div class="float-badge fb2">🎉 売上 +58% 達成</div>
+    </div>
+  </div>
+</section>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <span class="trust-label">実績でご信頼を</span>
+  <div class="trust-divider"></div>
+  <div class="trust-stat">
+    <div class="trust-stat-num">380+</div>
+    <div class="trust-stat-label">支援企業数</div>
+  </div>
+  <div class="trust-divider"></div>
+  <div class="trust-stat">
+    <div class="trust-stat-num">12年</div>
+    <div class="trust-stat-label">業界経験</div>
+  </div>
+  <div class="trust-divider"></div>
+  <div class="trust-stat">
+    <div class="trust-stat-num">98%</div>
+    <div class="trust-stat-label">継続率</div>
+  </div>
+  <div class="trust-divider"></div>
+  <div class="trust-stat">
+    <div class="trust-stat-num">4.9★</div>
+    <div class="trust-stat-label">平均満足度</div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services" id="services">
+  <div class="services-header">
+    <div class="section-tag">SERVICES</div>
+    <h2 class="section-title">私たちにできること</h2>
+    <p class="section-sub">ビジネスの課題にあわせて、最適なITソリューションをご提案します。</p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card">
+      <div class="service-icon">🌐</div>
+      <h3>Webサイト制作</h3>
+      <p>ブランドの魅力を最大限に引き出す、美しく使いやすいWebサイトをお届けします。コーポレートサイトからLP・ECまで対応。</p>
+      <a href="#contact" class="service-link">詳しく見る →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">⚙️</div>
+      <h3>業務システム開発</h3>
+      <p>現場の課題をヒアリングし、本当に使いやすいシステムを設計・開発。Excel業務の自動化から基幹システムまで幅広く対応。</p>
+      <a href="#contact" class="service-link">詳しく見る →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📱</div>
+      <h3>アプリ開発</h3>
+      <p>iOS・Android両対応のスマートフォンアプリを開発。社内ツールからユーザー向けサービスまで、要件に合わせてご提案。</p>
+      <a href="#contact" class="service-link">詳しく見る →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🛡️</div>
+      <h3>保守・サポート</h3>
+      <p>納品後も安心の月次保守契約をご用意。セキュリティ更新・バックアップ・軽微な改修対応まで、継続的にサポートします。</p>
+      <a href="#contact" class="service-link">詳しく見る →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">📊</div>
+      <h3>IT戦略コンサルティング</h3>
+      <p>DX推進・クラウド移行・ツール選定など、経営視点でIT活用を提案。補助金申請のサポートも承ります。</p>
+      <a href="#contact" class="service-link">詳しく見る →</a>
+    </div>
+    <div class="service-card">
+      <div class="service-icon">🎓</div>
+      <h3>IT研修・サポート</h3>
+      <p>スタッフのITリテラシー向上をお手伝い。ツールの使い方からセキュリティ教育まで、わかりやすく丁寧に研修します。</p>
+      <a href="#contact" class="service-link">詳しく見る →</a>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="testimonials" id="testimonials">
+  <div class="testimonials-header">
+    <div class="section-tag">VOICE</div>
+    <h2 class="section-title">お客様の声</h2>
+    <p class="section-sub">一緒に課題を乗り越えたお客様から、うれしい言葉をいただいています。</p>
+  </div>
+  <div class="testimonials-grid">
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p>「相談しやすくて、ITが苦手な私でも安心してお任せできました。サイトをリニューアルしてから問い合わせが3倍になり、本当に感謝しています。」</p>
+      <div class="testimonial-author">
+        <div class="t-avatar">田</div>
+        <div>
+          <div class="t-name">田中 美穂 様</div>
+          <div class="t-company">美容サロン経営 / 札幌市</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p>「在庫管理システムをゼロから作っていただき、作業時間が半分以下になりました。担当の方がいつも親切に対応してくれて、本当に頼りになります。」</p>
+      <div class="testimonial-author">
+        <div class="t-avatar">鈴</div>
+        <div>
+          <div class="t-name">鈴木 健一 様</div>
+          <div class="t-company">食料品卸売業 / 旭川市</div>
+        </div>
+      </div>
+    </div>
+    <div class="testimonial-card">
+      <div class="stars">★★★★★</div>
+      <p>「補助金を活用してECサイトを構築。申請サポートから制作まで全部お任せできて助かりました。売上も順調に伸びており大満足です！」</p>
+      <div class="testimonial-author">
+        <div class="t-avatar">伊</div>
+        <div>
+          <div class="t-name">伊藤 純子 様</div>
+          <div class="t-company">農産物直売所 / 帯広市</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- NEWS -->
+<section class="news" id="news">
+  <div class="news-inner">
+    <div class="news-header">
+      <div>
+        <div class="section-tag">NEWS</div>
+        <h2 class="section-title">お知らせ</h2>
+      </div>
+      <a href="#" class="news-more">一覧を見る →</a>
+    </div>
+    <div class="news-list">
+      <a href="#" class="news-item">
+        <span class="news-date">2025.04.15</span>
+        <span class="news-tag-pill pill-pr">プレスリリース</span>
+        <span class="news-title">AIを活用した業務効率化パッケージ「HanaFlow」の提供を開始しました</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-date">2025.03.28</span>
+        <span class="news-tag-pill pill-event">イベント</span>
+        <span class="news-title">4月19日開催「中小企業のためのDX入門セミナー」参加者募集中</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-date">2025.03.10</span>
+        <span class="news-tag-pill pill-news">お知らせ</span>
+        <span class="news-title">2025年度のIT導入補助金対象ベンダーに認定されました</span>
+      </a>
+      <a href="#" class="news-item">
+        <span class="news-date">2025.02.20</span>
+        <span class="news-tag-pill pill-news">お知らせ</span>
+        <span class="news-title">GW期間中（5/3〜5/6）のサポート対応について</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="pricing-section" id="pricing">
+  <div class="pricing-header">
+    <div class="section-tag">PRICING</div>
+    <h2 class="section-title">シンプルな料金プラン</h2>
+    <p class="section-sub">わかりやすい料金体系で、安心してご依頼いただけます。</p>
+  </div>
+  <div class="pricing-grid">
+
+    <div class="pricing-card">
+      <div class="pricing-badge">初期費用</div>
+      <div class="pricing-icon">🌐</div>
+      <h3 class="pricing-name">サイト制作</h3>
+      <p class="pricing-desc">ビジネスの顔となるWebサイトをゼロから制作。デザイン・コーディング・公開まで全てお任せください。</p>
+      <div class="pricing-price">
+        <span class="price-num">50,000</span>
+        <span class="price-unit">円 / 一括</span>
+      </div>
+      <ul class="pricing-features">
+        <li>✓ デザイン・コーディング一式</li>
+        <li>✓ スマートフォン対応（レスポンシブ）</li>
+        <li>✓ お問い合わせフォーム設置</li>
+        <li>✓ SEO基本設定</li>
+        <li>✓ 公開後の動作確認サポート</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">このプランで相談する →</a>
+    </div>
+
+    <div class="pricing-card pricing-card-featured">
+      <div class="pricing-popular-badge">おすすめセット</div>
+      <div class="pricing-badge" style="background:rgba(255,255,255,0.25);color:#fff;border-color:rgba(255,255,255,0.3);">制作 + 運営</div>
+      <div class="pricing-icon" style="background:rgba(255,255,255,0.2);">🚀</div>
+      <h3 class="pricing-name" style="color:#fff;">制作 ＋ 月額運営</h3>
+      <p class="pricing-desc" style="color:rgba(255,255,255,0.85);">サイト制作から公開後の運営まで、ワンストップでお任せ。更新作業やトラブル対応も月額でカバーします。</p>
+      <div class="pricing-price">
+        <div style="margin-bottom:4px;">
+          <span class="price-num" style="font-size:28px;">50,000</span>
+          <span class="price-unit" style="color:rgba(255,255,255,0.7);">円（初回）</span>
+        </div>
+        <div>
+          <span class="price-num">10,000</span>
+          <span class="price-unit" style="color:rgba(255,255,255,0.7);">円 / 月</span>
+        </div>
+      </div>
+      <ul class="pricing-features" style="color:rgba(255,255,255,0.9);">
+        <li>✓ サイト制作プランの全内容</li>
+        <li>✓ 月次コンテンツ更新（2回まで）</li>
+        <li>✓ セキュリティ・バックアップ管理</li>
+        <li>✓ アクセス解析レポート（月1回）</li>
+        <li>✓ メール・電話サポート対応</li>
+      </ul>
+      <a href="#contact" class="pricing-btn" style="background:#fff;color:var(--coral-deep);">このプランで相談する →</a>
+    </div>
+
+    <div class="pricing-card">
+      <div class="pricing-badge">月額費用のみ</div>
+      <div class="pricing-icon">🛡️</div>
+      <h3 class="pricing-name">月額運営サポート</h3>
+      <p class="pricing-desc">すでにサイトをお持ちの方向け。保守・更新・サポートを月額でご提供します。</p>
+      <div class="pricing-price">
+        <span class="price-num">10,000</span>
+        <span class="price-unit">円 / 月</span>
+      </div>
+      <ul class="pricing-features">
+        <li>✓ コンテンツ更新（月2回まで）</li>
+        <li>✓ セキュリティ・バックアップ管理</li>
+        <li>✓ 障害発生時の緊急対応</li>
+        <li>✓ アクセス解析レポート（月1回）</li>
+        <li>✓ メール・電話サポート対応</li>
+      </ul>
+      <a href="#contact" class="pricing-btn">このプランで相談する →</a>
+    </div>
+
+  </div>
+  <p class="pricing-note">※ 表示価格はすべて税別です。規模・要件によって別途お見積もりとなる場合があります。まずはお気軽にご相談ください。</p>
+</section>
+
+<!-- CTA -->
+<section class="cta-section" id="contact">
+  <div class="section-tag" style="background:rgba(255,255,255,0.2);color:#fff;border-color:rgba(255,255,255,0.3);">CONTACT</div>
+  <h2 class="section-title" style="color:#fff;margin-top:12px;">まずは、気軽にご相談ください。</h2>
+  <p>「何から始めればいいかわからない」というお悩みも大歓迎です。<br>初回相談は無料、オンライン・対面どちらでも対応します。</p>
+  <div class="cta-actions">
+    <a href="mailto:hello@hana-tech.jp" class="btn-white">無料相談を予約する →</a>
+    <a href="tel:070-9384-1753" class="btn-outline-white">📞 070-9384-1753</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <a href="#" class="nav-logo">
+        <div class="logo-dot" style="background:var(--peach);">🌸</div>
+        食事場
+      </a>
+      <p>テクノロジーで笑顔をつくる。<br>札幌を拠点に、全国の中小企業の<br>デジタル化を支援しています。</p>
+    </div>
+    <div class="footer-col">
+      <h4>サービス</h4>
+      <a href="#">Webサイト制作</a>
+      <a href="#">システム開発</a>
+      <a href="#">アプリ開発</a>
+      <a href="#">保守・サポート</a>
+      <a href="#">ITコンサルティング</a>
+    </div>
+    <div class="footer-col">
+      <h4>会社情報</h4>
+      <a href="#">会社概要</a>
+      <a href="#">代表メッセージ</a>
+      <a href="#">チーム紹介</a>
+      <a href="#">採用情報</a>
+    </div>
+    <div class="footer-col">
+      <h4>お問い合わせ</h4>
+      <a href="#">無料相談フォーム</a>
+      <a href="#">資料請求</a>
+      <a href="#">よくある質問</a>
+      <a href="#">アクセス</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2025 食事場 Inc. All rights reserved.</span>
+    <div class="footer-bottom-links">
+      <a href="#">プライバシーポリシー</a>
+      <a href="#">利用規約</a>
+      <a href="#">サイトマップ</a>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
