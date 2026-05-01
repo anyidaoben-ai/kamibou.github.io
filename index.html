@@ -1,466 +1,531 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 
 const seed = (n) => {
   let x = Math.sin(n + 1) * 43758.5453;
   return x - Math.floor(x);
 };
 
-const STAR_DATA = Array.from({ length: 80 }, (_, i) => ({
-  cx: seed(i * 3) * 800,
-  cy: seed(i * 3 + 1) * 400,
-  r: seed(i * 3 + 2) > 0.85 ? 1.8 : 0.9,
-  op: 0.3 + seed(i) * 0.65,
+const STAR_DATA = Array.from({ length: 100 }, (_, i) => ({
+  cx: seed(i * 3) * 1400, cy: seed(i * 3 + 1) * 700,
+  r: seed(i * 3 + 2) > 0.88 ? 1.8 : 0.9,
+  op: 0.2 + seed(i) * 0.6,
 }));
 
 function Stars() {
-  return (
-    <>
-      {STAR_DATA.map((s, i) => (
-        <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill="white" opacity={s.op} />
-      ))}
-    </>
-  );
+  return <>{STAR_DATA.map((s, i) => (
+    React.createElement("circle", {key: i cx: s.cx cy: s.cy r: s.r fill: "white" opacity: s.op})
+  ))}</>;
 }
 
 function TokyoScene({ a1, a2 }) {
   const blds = [
-    { x: 20, y: 200, w: 50, h: 300 }, { x: 80, y: 240, w: 35, h: 260 },
-    { x: 125, y: 160, w: 60, h: 340 }, { x: 200, y: 220, w: 40, h: 280 },
-    { x: 250, y: 180, w: 55, h: 320 }, { x: 320, y: 130, w: 70, h: 370 },
-    { x: 405, y: 200, w: 45, h: 300 }, { x: 460, y: 170, w: 55, h: 330 },
-    { x: 530, y: 140, w: 65, h: 360 }, { x: 610, y: 190, w: 50, h: 310 },
-    { x: 675, y: 230, w: 40, h: 270 }, { x: 725, y: 200, w: 55, h: 300 },
+    {x:20,y:200,w:50,h:300},{x:80,y:240,w:35,h:260},{x:125,y:160,w:60,h:340},
+    {x:200,y:220,w:40,h:280},{x:250,y:180,w:55,h:320},{x:320,y:130,w:70,h:370},
+    {x:405,y:200,w:45,h:300},{x:460,y:170,w:55,h:330},{x:530,y:140,w:65,h:360},
+    {x:610,y:190,w:50,h:310},{x:675,y:230,w:40,h:270},{x:725,y:200,w:55,h:300},
   ];
   return (
-    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
-      <Stars />
-      <circle cx={680} cy={70} r={40} fill="#b8d4ff" opacity={0.85} />
-      <circle cx={695} cy={62} r={40} fill="#050a1a" opacity={0.55} />
-      {blds.map((b, i) => (
-        <g key={i}>
-          <rect x={b.x} y={b.y} width={b.w} height={b.h}
-            fill={`hsl(${215 + i * 8},45%,${7 + (i % 4) * 3}%)`} />
-          {Array.from({ length: Math.floor(b.h / 30) }, (_, r) => (
-            <rect key={r} x={b.x + 6} y={b.y + r * 30 + 10} width={8} height={6}
-              fill={seed(i * 100 + r) > 0.55 ? a1 : a2}
-              opacity={0.5 + seed(i + r) * 0.45} />
+    <svg viewBox: "0 0 800 500" style: {width:"100%",height:"100%",position:"absolute",inset:0}>
+      React.createElement("Stars", null)
+      React.createElement("circle", {cx: 680 cy: 70 r: 40 fill: "#b8d4ff" opacity: 0.85})
+      React.createElement("circle", {cx: 695 cy: 62 r: 40 fill: "#050a1a" opacity: 0.55})
+      {blds.map((b,i)=>(
+        <g key: i>
+          React.createElement("rect", {x: b.x y: b.y width: b.w height: b.h fill: `hsl(${215+i*8,45%,${7+(i%4)*3}%)`}})
+          {Array.from({length:Math.floor(b.h/30)},(_,r)=>(
+            <rect key: r x: b.x+6 y: b.y+r*30+10 width: 8 height: 6
+              fill: seed(i*100+r)>0.55?a1:a2 opacity: 0.5+seed(i+r)*0.45 />
           ))}
         </g>
       ))}
-      <path d="M0,310 Q200,285 400,300 Q600,315 800,295" stroke={a1} strokeWidth={2.5} fill="none" opacity={0.7} />
-      <path d="M0,340 Q300,315 550,335 Q680,345 800,325" stroke={a2} strokeWidth={1.8} fill="none" opacity={0.5} />
-      <ellipse cx={160} cy={298} rx={18} ry={6} fill={a1} opacity={0.95} />
-      <ellipse cx={480} cy={320} rx={14} ry={5} fill={a2} opacity={0.9} />
-      <ellipse cx={690} cy={308} rx={16} ry={5} fill={a1} opacity={0.85} />
-      <rect x={0} y={455} width={800} height={45} fill="hsl(220,50%,4%)" />
-      <rect x={0} y={450} width={800} height={10} fill={a1} opacity={0.12} />
+      React.createElement("path", {d: "M0,310 Q200,285 400,300 Q600,315 800,295" stroke: a1 strokeWidth: 2.5 fill: "none" opacity: 0.7})
+      React.createElement("path", {d: "M0,340 Q300,315 550,335 Q680,345 800,325" stroke: a2 strokeWidth: 1.8 fill: "none" opacity: 0.5})
+      React.createElement("ellipse", {cx: 160 cy: 298 rx: 18 ry: 6 fill: a1 opacity: 0.95})
+      React.createElement("ellipse", {cx: 480 cy: 320 rx: 14 ry: 5 fill: a2 opacity: 0.9})
+      React.createElement("rect", {x: 0 y: 455 width: 800 height: 45 fill: "hsl(220,50%,4%)"})
+      React.createElement("rect", {x: 0 y: 450 width: 800 height: 10 fill: a1 opacity: 0.12})
     </svg>
   );
 }
 
 function MarsScene({ a1, a2 }) {
   return (
-    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
-      {STAR_DATA.slice(0, 50).map((s, i) => (
-        <circle key={i} cx={s.cx} cy={s.cy * 0.7} r={s.r} fill="white" opacity={s.op * 0.7} />
+    <svg viewBox: "0 0 800 500" style: {width:"100%",height:"100%",position:"absolute",inset:0}>
+      {STAR_DATA.slice(0,50).map((s,i)=>(
+        React.createElement("circle", {key: i cx: s.cx*0.57 cy: s.cy*0.7 r: s.r fill: "white" opacity: s.op*0.7})
       ))}
-      <ellipse cx={120} cy={90} rx={25} ry={15} fill="#ff8c6b" opacity={0.7} />
-      <rect x={0} y={300} width={800} height={200} fill="#8b3a1a" />
-      <ellipse cx={400} cy={302} rx={600} ry={40} fill="#6b2a0f" />
-      <ellipse cx={150} cy={295} rx={100} ry={15} fill="#7a3015" />
-      <ellipse cx={650} cy={298} rx={80} ry={12} fill="#7a3015" />
-      <ellipse cx={400} cy={240} rx={320} ry={200} fill="none" stroke={a1} strokeWidth={3} opacity={0.4} />
-      <ellipse cx={400} cy={240} rx={310} ry={192} fill="#1a0805" opacity={0.85} />
-      <rect x={380} y={60} width={40} height={180} fill={`hsl(20,30%,15%)`} />
-      <ellipse cx={400} cy={60} rx={60} ry={20} fill={a2} opacity={0.3} />
-      {[200, 260, 320, 380, 440, 500, 560].map((x, i) => (
-        <g key={i}>
-          <rect x={x} y={180 - i % 3 * 25} width={30} height={100 + i % 3 * 25} fill={`hsl(20,25%,${10 + i % 3 * 4}%)`} />
-          <rect x={x + 5} y={185 - i % 3 * 25} width={8} height={6} fill={a1} opacity={0.7} />
+      React.createElement("ellipse", {cx: 120 cy: 90 rx: 25 ry: 15 fill: "#ff8c6b" opacity: 0.7})
+      React.createElement("rect", {x: 0 y: 300 width: 800 height: 200 fill: "#8b3a1a"})
+      React.createElement("ellipse", {cx: 400 cy: 302 rx: 600 ry: 40 fill: "#6b2a0f"})
+      React.createElement("ellipse", {cx: 400 cy: 240 rx: 320 ry: 200 fill: "none" stroke: a1 strokeWidth: 3 opacity: 0.4})
+      React.createElement("ellipse", {cx: 400 cy: 240 rx: 310 ry: 192 fill: "#1a0805" opacity: 0.85})
+      {[200,260,320,380,440,500,560].map((x,i)=>(
+        <g key: i>
+          React.createElement("rect", {x: x y: 180-i%3*25 width: 30 height: 100+i%3*25 fill: `hsl(20,25%,${10+i%3*4%)`}})
+          React.createElement("rect", {x: x+5 y: 185-i%3*25 width: 8 height: 6 fill: a1 opacity: 0.7})
         </g>
       ))}
-      <path d="M300,240 Q400,220 500,240" stroke={a2} strokeWidth={2} fill="none" opacity={0.6} strokeDasharray="8,4" />
     </svg>
   );
 }
 
 function AquaScene({ a1, a2 }) {
   return (
-    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
-      <rect x={0} y={0} width={800} height={500} fill="#020d18" />
-      {Array.from({ length: 30 }, (_, i) => (
-        <circle key={i} cx={seed(i * 7) * 800} cy={seed(i * 7 + 1) * 500}
-          r={seed(i * 7 + 2) * 4 + 1} fill={a1} opacity={0.04 + seed(i) * 0.08} />
+    <svg viewBox: "0 0 800 500" style: {width:"100%",height:"100%",position:"absolute",inset:0}>
+      React.createElement("rect", {x: 0 y: 0 width: 800 height: 500 fill: "#020d18"})
+      {Array.from({length:30},(_,i)=>(
+        React.createElement("circle", {key: i cx: seed(i*7)*800 cy: seed(i*7+1)*500
+          r: seed(i*7+2)*4+1 fill: a1 opacity: 0.04+seed(i)*0.08})
       ))}
-      {Array.from({ length: 40 }, (_, i) => (
-        <circle key={i} cx={seed(i * 5 + 200) * 800} cy={seed(i * 5 + 201) * 400 + 50}
-          r={1} fill="white" opacity={0.1 + seed(i) * 0.2} />
-      ))}
-      <ellipse cx={400} cy={250} rx={300} ry={230} fill="none" stroke={a1} strokeWidth={4} opacity={0.5} />
-      <ellipse cx={400} cy={250} rx={290} ry={222} fill="#030f1f" opacity={0.9} />
-      {[200, 260, 320, 380, 440, 500, 560].map((x, i) => (
-        <g key={i}>
-          <rect x={x - 12} y={210 - i % 4 * 18} width={24} height={80 + i % 4 * 18} fill={`hsl(195,40%,${8 + i % 3 * 4}%)`} />
-          <rect x={x - 5} y={215} width={6} height={5} fill={a2} opacity={0.7} />
+      React.createElement("ellipse", {cx: 400 cy: 250 rx: 300 ry: 230 fill: "none" stroke: a1 strokeWidth: 4 opacity: 0.5})
+      React.createElement("ellipse", {cx: 400 cy: 250 rx: 290 ry: 222 fill: "#030f1f" opacity: 0.9})
+      {[200,260,320,380,440,500,560].map((x,i)=>(
+        <g key: i>
+          React.createElement("rect", {x: x-12 y: 210-i%4*18 width: 24 height: 80+i%4*18 fill: `hsl(195,40%,${8+i%3*4%)`}})
+          React.createElement("rect", {x: x-5 y: 215 width: 6 height: 5 fill: a2 opacity: 0.7})
         </g>
       ))}
-      {Array.from({ length: 15 }, (_, i) => (
-        <path key={i} d={`M${seed(i * 11) * 800},${400 + seed(i * 11 + 1) * 80} Q${seed(i * 11 + 2) * 800},${350 + seed(i * 11 + 3) * 80} ${seed(i * 11 + 4) * 800},${420 + seed(i * 11 + 5) * 60}`}
-          stroke={i % 2 === 0 ? "#ff7f50" : "#20b2aa"} strokeWidth={1} fill="none" opacity={0.3 + seed(i) * 0.4} />
-      ))}
-      <ellipse cx={400} cy={80} rx={350} ry={60} fill="#00d4ff" opacity={0.06} />
-      <text x={400} y={420} textAnchor="middle" fill={a1} fontSize={11} opacity={0.5} fontFamily="monospace">DEPTH: 300m</text>
     </svg>
   );
 }
 
 function SkyScene({ a1, a2 }) {
   return (
-    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
-      <Stars />
-      {[100, 200, 350, 500, 650].map((cx, i) => (
-        <ellipse key={i} cx={cx} cy={350 + i * 10} rx={130 + i * 20} ry={30 + i * 8}
-          fill="white" opacity={0.04 + i * 0.02} />
-      ))}
-      {[
-        { x: 120, y: 280, w: 200, h: 60 },
-        { x: 380, y: 220, w: 240, h: 70 },
-        { x: 560, y: 300, w: 180, h: 55 },
-        { x: 50, y: 350, w: 160, h: 50 },
-        { x: 620, y: 380, w: 150, h: 48 },
-      ].map((p, i) => (
-        <g key={i}>
-          <ellipse cx={p.x + p.w / 2} cy={p.y + p.h / 2} rx={p.w / 2} ry={p.h / 2}
-            fill={`hsl(${220 + i * 15},30%,${10 + i % 3 * 4}%)`}
-            stroke={i === 1 ? a1 : a2} strokeWidth={1.5} opacity={0.9} />
-          {Array.from({ length: 5 }, (_, j) => (
-            <rect key={j} x={p.x + 15 + j * 35} y={p.y + 10} width={20} height={25}
-              fill={`hsl(${220 + i * 15},30%,${15 + j % 3 * 5}%)`} />
+    <svg viewBox: "0 0 800 500" style: {width:"100%",height:"100%",position:"absolute",inset:0}>
+      React.createElement("Stars", null)
+      {[{x:120,y:280,w:200,h:60},{x:380,y:220,w:240,h:70},{x:560,y:300,w:180,h:55},{x:50,y:350,w:160,h:50},{x:620,y:380,w:150,h:48}].map((p,i)=>(
+        <g key: i>
+          React.createElement("ellipse", {cx: p.x+p.w/2 cy: p.y+p.h/2 rx: p.w/2 ry: p.h/2
+            fill: `hsl(${220+i*15,30%,${10+i%3*4}%)`} stroke: i===1?a1:a2 strokeWidth: 1.5 opacity: 0.9})
+          {Array.from({length:5},(_,j)=>(
+            React.createElement("rect", {key: j x: p.x+15+j*35 y: p.y+10 width: 20 height: 25
+              fill: `hsl(${220+i*15,30%,${15+j%3*5}%)`}})
           ))}
-          <rect x={p.x + p.w / 2 - 4} y={p.y - 30} width={8} height={35} fill={a1} opacity={0.6} />
-          <circle cx={p.x + p.w / 2} cy={p.y - 35} r={6} fill={a2} opacity={0.8} />
+          React.createElement("rect", {x: p.x+p.w/2-4 y: p.y-30 width: 8 height: 35 fill: a1 opacity: 0.6})
+          React.createElement("circle", {cx: p.x+p.w/2 cy: p.y-35 r: 6 fill: a2 opacity: 0.8})
         </g>
       ))}
-      <path d="M220,295 L380,235" stroke={a1} strokeWidth={1.5} strokeDasharray="6,4" opacity={0.5} />
-      <path d="M620,300 L620,230" stroke={a2} strokeWidth={1.5} strokeDasharray="6,4" opacity={0.5} />
     </svg>
   );
 }
 
-function CustomScene({ a1, a2, name }) {
-  const letters = name.slice(0, 2).toUpperCase();
+function CustomScene({ a1, name }) {
+  const letters = name.slice(0,2).toUpperCase();
   return (
-    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
-      <Stars />
-      {Array.from({ length: 10 }, (_, i) => (
-        <g key={i}>
-          <rect x={seed(i * 13) * 700 + 30} y={200 + seed(i * 13 + 1) * 100}
-            width={40 + seed(i * 13 + 2) * 60} height={120 + seed(i * 13 + 3) * 180}
-            fill={`hsl(${210 + i * 18},40%,${8 + i % 4 * 3}%)`} />
-        </g>
+    <svg viewBox: "0 0 800 500" style: {width:"100%",height:"100%",position:"absolute",inset:0}>
+      React.createElement("Stars", null)
+      {Array.from({length:10},(_,i)=>(
+        React.createElement("rect", {key: i x: seed(i*13)*700+30 y: 200+seed(i*13+1)*100
+          width: 40+seed(i*13+2)*60 height: 120+seed(i*13+3)*180
+          fill: `hsl(${210+i*18,40%,${8+i%4*3}%)`}})
       ))}
-      <circle cx={400} cy={230} r={120} fill="none" stroke={a1} strokeWidth={2} opacity={0.35} strokeDasharray="12,6" />
-      <circle cx={400} cy={230} r={80} fill="none" stroke={a2} strokeWidth={1.5} opacity={0.25} />
-      <text x={400} y={245} textAnchor="middle" fontSize={64} fontWeight={700}
-        fill={a1} opacity={0.2} fontFamily="monospace">{letters}</text>
-      <rect x={0} y={455} width={800} height={45} fill="hsl(220,50%,4%)" />
-      <rect x={0} y={450} width={800} height={8} fill={a1} opacity={0.15} />
+      React.createElement("text", {x: 400 y: 245 textAnchor: "middle" fontSize: 64 fontWeight: 700
+        fill: a1 opacity: 0.2 fontFamily: "monospace"}, "{letters}")
+      React.createElement("rect", {x: 0 y: 455 width: 800 height: 45 fill: "hsl(220,50%,4%)"})
     </svg>
   );
 }
-
-const BUILTIN_CITIES = [
-  {
-    id: "neo-tokyo",
-    name: "ネオ東京",
-    year: 2087,
-    location: "東京湾岸",
-    description: "AIが管理する超高密度都市。空中回廊と垂直農場が幾重にも重なり、300万人が空中で暮らす未来の首都。夜には無数のネオンが海面を染める。",
-    features: ["空中交通システム", "垂直農場タワー", "量子ネットワーク", "AIガバナンス"],
-    bg: "#050a1a", a1: "#00f5ff", a2: "#ff0090", scene: "tokyo",
-  },
-  {
-    id: "mars-dome",
-    name: "マーズドーム",
-    year: 2145,
-    location: "火星 / オリンポス山麓",
-    description: "巨大ドームに守られた人類初の惑星間都市。赤い砂漠の中に1万人が暮らし、テラフォーミング研究の最前線として機能する。",
-    features: ["大気生成装置", "地熱エネルギー", "軌道エレベーター", "バイオドーム農場"],
-    bg: "#1a0805", a1: "#ff6b35", a2: "#ffd700", scene: "mars",
-  },
-  {
-    id: "aqua-city",
-    name: "アクアシティ",
-    year: 2110,
-    location: "太平洋 / 深度300m",
-    description: "海底に広がる透明ドームの都市群。太陽光が届かない世界で、海洋資源の持続可能な活用と深海研究が行われる神秘の都。",
-    features: ["海流発電", "珊瑚礁再生プログラム", "深海採掘", "バイオルミネッセンス照明"],
-    bg: "#020d18", a1: "#00d4ff", a2: "#40e0d0", scene: "aqua",
-  },
-  {
-    id: "sky-haven",
-    name: "スカイヘイブン",
-    year: 2099,
-    location: "成層圏 / 高度40km",
-    description: "浮遊プラットフォームで構成される空中都市群。反重力推進技術により常に理想の気候帯を漂い、太陽光と風力で完全エネルギー自給を達成。",
-    features: ["反重力推進エンジン", "太陽光発電帯", "雲雨水収集システム", "空中農園"],
-    bg: "#05101f", a1: "#a78bfa", a2: "#34d399", scene: "sky",
-  },
-];
 
 function CityScene({ city }) {
-  const props = { a1: city.a1, a2: city.a2 };
-  if (city.scene === "tokyo") return <TokyoScene {...props} />;
-  if (city.scene === "mars") return <MarsScene {...props} />;
-  if (city.scene === "aqua") return <AquaScene {...props} />;
-  if (city.scene === "sky") return <SkyScene {...props} />;
-  return <CustomScene {...props} name={city.name} />;
+  const p = { a1: city.a1, a2: city.a2 };
+  if (city.scene==="tokyo") return React.createElement("TokyoScene", {{...p}});
+  if (city.scene==="mars")  return React.createElement("MarsScene", {{...p}});
+  if (city.scene==="aqua")  return React.createElement("AquaScene", {{...p}});
+  if (city.scene==="sky")   return React.createElement("SkyScene", {{...p}});
+  return React.createElement("CustomScene", {{...p} name: city.name});
 }
 
-const THEMES = [
-  { label: "サイバーパンク", bg: "#050a1a", a1: "#00f5ff", a2: "#ff0090" },
-  { label: "砂漠・惑星", bg: "#1a0805", a1: "#ff6b35", a2: "#ffd700" },
-  { label: "深海・水中", bg: "#020d18", a1: "#00d4ff", a2: "#40e0d0" },
-  { label: "成層圏・空", bg: "#05101f", a1: "#a78bfa", a2: "#34d399" },
-  { label: "核融合都市", bg: "#0d0020", a1: "#ff4aff", a2: "#ffe44a" },
-  { label: "氷河文明", bg: "#030a18", a1: "#b3e5fc", a2: "#80cbc4" },
+/* ── 3D Isometric Map ── */
+function City3DMap({ city }) {
+  const GRID=10, TW=54, TH=27, W=900, H=620;
+  const CX=W*0.52, CY=H*0.28;
+  const [tick, setTick] = useState(0);
+
+  useEffect(()=>{
+    const t = setInterval(()=>setTick(n=>n+1), 65);
+    return ()=>clearInterval(t);
+  },[]);
+
+  const cityKey = useMemo(()=>
+    city.id.split("").reduce((a,c)=>a+c.charCodeAt(0),0),[city.id]);
+
+  function iso(c,r,z){ return { x:(c-r)*(TW/2)+CX, y:(c+r)*(TH/2)-z+CY }; }
+  function pts(arr){ return arr.map(q=>`${q.x.toFixed(1)},${q.y.toFixed(1)}`).join(" "); }
+
+  const buildings = useMemo(()=>{
+    const arr=[];
+    for(let r=0;r<GRID;r++) for(let c=0;c<GRID;c++){
+      const idx=r*GRID+c;
+      const dist=Math.hypot(c-GRID/2+0.5,r-GRID/2+0.5);
+      const boost=Math.max(0,1-dist/(GRID*0.52));
+      const h=seed(idx*7+cityKey)*(45+boost*90)+8;
+      const empty=seed(idx*13+cityKey)>0.84;
+      arr.push({c,r,h:empty?0:Math.max(h,6),idx});
+    }
+    arr.sort((a,b)=>(a.c+a.r)-(b.c+b.r));
+    return arr;
+  },[cityKey]);
+
+  const vehicles = useMemo(()=>
+    Array.from({length:10},(_,i)=>({
+      i,
+      speed:0.2+seed(i*31+cityKey)*0.5,
+      offset:seed(i*17+cityKey)*GRID*100,
+      lane:Math.floor(seed(i*23+cityKey)*(GRID-1)),
+      horiz:seed(i*37+cityKey)>0.5,
+      col:seed(i*5+cityKey)>0.5?city.a1:city.a2,
+    })),[cityKey,city.a1,city.a2]);
+
+  const gc=[iso(0,0,0),iso(GRID,0,0),iso(GRID,GRID,0),iso(0,GRID,0)];
+
+  return (
+    <svg viewBox: `0 0 ${W ${H}`} style: {width:"100%",height:"100%"}>
+      {/* Stars bg */}
+      <svg viewBox: "0 0 1400 700" width: W height: H preserveAspectRatio: "xMidYMid slice">
+        React.createElement("Stars", null)
+      </svg>
+
+      {/* Ground */}
+      React.createElement("polygon", {points: pts(gc) fill: city.a1 fillOpacity: 0.04})
+
+      {/* Grid */}
+      {Array.from({length:GRID+1},(_,i)=>{
+        const s1=iso(i,0,0),e1=iso(i,GRID,0),s2=iso(0,i,0),e2=iso(GRID,i,0);
+        return (<g key: i>
+          React.createElement("line", {x1: s1.x y1: s1.y x2: e1.x y2: e1.y stroke: city.a1 strokeWidth: 0.6 opacity: 0.18})
+          React.createElement("line", {x1: s2.x y1: s2.y x2: e2.x y2: e2.y stroke: city.a1 strokeWidth: 0.6 opacity: 0.18})
+        </g>);
+      })}
+
+      {/* Buildings */}
+      {buildings.map(({c,r,h,idx})=>{
+        if(h<3) return null;
+        const top =[iso(c,r,h),  iso(c+1,r,h),  iso(c+1,r+1,h),iso(c,r+1,h)];
+        const left=[iso(c,r+1,h),iso(c+1,r+1,h),iso(c+1,r+1,0),iso(c,r+1,0)];
+        const right=[iso(c+1,r,h),iso(c+1,r+1,h),iso(c+1,r+1,0),iso(c+1,r,0)];
+        const floors=Math.max(1,Math.floor(h/13));
+        const tall=h>65;
+        return (<g key: `${c-${r}`}>
+          React.createElement("polygon", {points: pts(left) fill: city.bg})
+          React.createElement("polygon", {points: pts(left) fill: city.a1 fillOpacity: 0.12 stroke: city.a1 strokeWidth: 0.5 strokeOpacity: 0.35})
+          {Array.from({length:floors},(_,fi)=>{
+            if(seed(idx*200+fi+Math.floor(tick*0.009))React.createElement("0", {.42) return null;
+            const wy=left[0].y+(left[2].y-left[0].y)*((fi+0.5)/floors);
+            const wx=(left[0].x+left[1].x)/2;
+            return <rect key: fi x: wx-3 y: wy-2.5 width: 6 height: 4 fill: city.a1 opacity: 0.5+seed(idx+fi)*0.45});
+          })}
+
+          React.createElement("polygon", {points: pts(right) fill: city.bg})
+          React.createElement("polygon", {points: pts(right) fill: city.a2 fillOpacity: 0.18 stroke: city.a2 strokeWidth: 0.5 strokeOpacity: 0.35})
+          {Array.from({length:floors},(_,fi)=>{
+            if(seed(idx*300+fi+Math.floor(tick*0.007))React.createElement("0", {.48) return null;
+            const wy=right[0].y+(right[2].y-right[0].y)*((fi+0.5)/floors);
+            const wx=(right[0].x+right[1].x)/2;
+            return <rect key: fi x: wx-2.5 y: wy-2.5 width: 5 height: 4 fill: city.a2 opacity: 0.45+seed(idx*2+fi)*0.45});
+          })}
+
+          React.createElement("polygon", {points: pts(top) fill: city.a1 fillOpacity: 0.25 stroke: city.a1 strokeWidth: 0.7 strokeOpacity: 0.7})
+
+          {tall&&(()=>{
+            const apex: 
+              x:(top[0].x+top[1].x+top[2].x+top[3].x)/4,
+              y:(top[0].y+top[1].y+top[2].y+top[3].y)/4,
+            ;
+            const pulse=0.3+Math.abs(Math.sin(tick*0.11+idx))*0.7;
+            return (<>
+              React.createElement("circle", {cx: apex.x cy: apex.y r: 6 fill: city.a1 opacity: pulse*0.22})
+              React.createElement("circle", {cx: apex.x cy: apex.y r: 2.5 fill: city.a1 opacity: pulse})
+            </>);
+          })()}
+        </g>);
+      })}
+
+      {/* Vehicles */}
+      {vehicles.map(v=>{
+        const t=((tick*v.speed+v.offset)%(GRID*100))/100;
+        const alt=16+seed(v.i*11+cityKey)*30;
+        const pos=v.horiz?iso(t%GRID,v.lane+0.5,alt):iso(v.lane+0.5,t%GRID,alt);
+        const trail=v.horiz?iso(Math.max(0,t%GRID-0.65),v.lane+0.5,alt):iso(v.lane+0.5,Math.max(0,t%GRID-0.65),alt);
+        return (<g key: v.i>
+          React.createElement("line", {x1: trail.x y1: trail.y x2: pos.x y2: pos.y stroke: v.col strokeWidth: 1.2 opacity: 0.4})
+          React.createElement("circle", {cx: pos.x cy: pos.y r: 3 fill: v.col opacity: 0.9})
+          React.createElement("circle", {cx: pos.x cy: pos.y r: 6 fill: v.col opacity: 0.14})
+        </g>);
+      })}
+
+      {/* Scan ring */}
+      {(()=>{
+        const phase=(tick%90)/90;
+        const cx=CX, cy=CY+(GRID*TH/2);
+        return React.createElement("ellipse", {cx: cx cy: cy
+          rx: (GRID*TW/2)*(0.1+phase*0.9) ry: (GRID*TH/2)*(0.1+phase*0.9)
+          fill: "none" stroke: city.a1 strokeWidth: 1.5 opacity: (1-phase)*0.45});
+      })()}
+
+      {/* HUD label */}
+      React.createElement("text", {x: 20 y: H-14 fill: city.a1 fontSize: 9 opacity: 0.45 fontFamily: "monospace"}, "{`[GRID ${GRID}×${GRID}] [LIVE]`}")
+    </svg>
+  );
+}
+
+/* ── Data ── */
+const BUILTIN_CITIES = [
+  { id:"neo-tokyo", name:"ネオ東京",   location:"東京湾岸",
+    description:"AIが管理する超高密度都市。空中回廊と垂直農場が幾重にも重なり、300万人が空中で暮らす未来の首都。夜には無数のネオンが海面を染める。",
+    features:["空中交通システム","垂直農場タワー","量子ネットワーク","AIガバナンス"],
+    bg:"#050a1a", a1:"#00f5ff", a2:"#ff0090", scene:"tokyo" },
+  { id:"mars-dome", name:"マーズドーム", location:"火星 / オリンポス山麓",
+    description:"巨大ドームに守られた人類初の惑星間都市。赤い砂漠の中に1万人が暮らし、テラフォーミング研究の最前線として機能する。",
+    features:["大気生成装置","地熱エネルギー","軌道エレベーター","バイオドーム農場"],
+    bg:"#1a0805", a1:"#ff6b35", a2:"#ffd700", scene:"mars" },
+  { id:"aqua-city", name:"アクアシティ", location:"太平洋 / 深度300m",
+    description:"海底に広がる透明ドームの都市群。太陽光が届かない世界で、海洋資源の持続可能な活用と深海研究が行われる神秘の都。",
+    features:["海流発電","珊瑚礁再生プログラム","深海採掘","バイオルミネッセンス照明"],
+    bg:"#020d18", a1:"#00d4ff", a2:"#40e0d0", scene:"aqua" },
+  { id:"sky-haven", name:"スカイヘイブン", location:"成層圏 / 高度40km",
+    description:"浮遊プラットフォームで構成される空中都市群。反重力推進技術により常に理想の気候帯を漂い、太陽光と風力で完全エネルギー自給を達成。",
+    features:["反重力推進エンジン","太陽光発電帯","雲雨水収集システム","空中農園"],
+    bg:"#05101f", a1:"#a78bfa", a2:"#34d399", scene:"sky" },
 ];
 
-export default function FutureCityExplorer() {
-  const [cities, setCities] = useState(BUILTIN_CITIES);
-  const [active, setActive] = useState(null);
-  const [showAdd, setShowAdd] = useState(false);
-  const [form, setForm] = useState({ name: "", year: 2100, location: "", description: "", features: "", themeIdx: 0 });
-  const [pulse, setPulse] = useState(0);
+const THEMES = [
+  { label:"サイバーパンク", bg:"#050a1a", a1:"#00f5ff", a2:"#ff0090" },
+  { label:"砂漠・惑星",     bg:"#1a0805", a1:"#ff6b35", a2:"#ffd700" },
+  { label:"深海・水中",     bg:"#020d18", a1:"#00d4ff", a2:"#40e0d0" },
+  { label:"成層圏・空",     bg:"#05101f", a1:"#a78bfa", a2:"#34d399" },
+  { label:"核融合都市",     bg:"#0d0020", a1:"#ff4aff", a2:"#ffe44a" },
+  { label:"氷河文明",       bg:"#030a18", a1:"#b3e5fc", a2:"#80cbc4" },
+];
 
-  useEffect(() => {
-    (async () => {
+/* ── App ── */
+export default function FutureCityExplorer() {
+  const [cities, setCities]   = useState(BUILTIN_CITIES);
+  const [active, setActive]   = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm]       = useState({ name:"", location:"", description:"", features:"", themeIdx:0 });
+
+  useEffect(()=>{
+    (async()=>{
       try {
         const r = await window.storage.get("user-cities");
-        if (r) {
-          const saved = JSON.parse(r.value);
-          if (Array.isArray(saved) && saved.length) {
-            setCities([...BUILTIN_CITIES, ...saved]);
-          }
-        }
-      } catch (_) {}
+        if(r){ const s=JSON.parse(r.value); if(Array.isArray(s)&&s.length) setCities([...BUILTIN_CITIES,...s]); }
+      } catch(_){}
     })();
-    const t = setInterval(() => setPulse(p => p + 1), 2000);
-    return () => clearInterval(t);
-  }, []);
+  },[]);
 
   async function saveCity() {
-    if (!form.name.trim()) return;
-    const t = THEMES[form.themeIdx];
-    const newCity = {
-      id: `custom-${Date.now()}`,
-      name: form.name,
-      year: Number(form.year),
-      location: form.location,
-      description: form.description,
-      features: form.features.split("\n").filter(f => f.trim()),
-      bg: t.bg, a1: t.a1, a2: t.a2,
-      scene: "custom",
+    if(!form.name.trim()) return;
+    const t=THEMES[form.themeIdx];
+    const newCity: 
+      id:`custom-${Date.now()`, name:form.name, location:form.location,
+      description:form.description, features:form.features.split("\n").filter(f=>f.trim()),
+      bg:t.bg, a1:t.a1, a2:t.a2, scene:"custom",
     };
-    const custom = cities.filter(c => c.scene === "custom");
-    const next = [...custom, newCity];
-    try { await window.storage.set("user-cities", JSON.stringify(next)); } catch (_) {}
-    setCities([...BUILTIN_CITIES, ...next]);
+    const custom=cities.filter(c=>c.scene==="custom");
+    const next=[...custom,newCity];
+    try{ await window.storage.set("user-cities",JSON.stringify(next)); }catch(_){}
+    setCities([...BUILTIN_CITIES,...next]);
     setShowAdd(false);
-    setForm({ name: "", year: 2100, location: "", description: "", features: "", themeIdx: 0 });
+    setForm({name:"",location:"",description:"",features:"",themeIdx:0});
   }
 
   function removeCity(id) {
-    const next = cities.filter(c => c.id !== id);
-    const custom = next.filter(c => c.scene === "custom");
-    try { window.storage.set("user-cities", JSON.stringify(custom)); } catch (_) {}
+    const next=cities.filter(c=>c.id!==id);
+    const custom=next.filter(c=>c.scene==="custom");
+    try{ window.storage.set("user-cities",JSON.stringify(custom)); }catch(_){}
     setCities(next);
-    if (active?.id === id) setActive(null);
+    if(active?.id===id) setActive(null);
   }
 
-  const ss = `
+  const css = `
     @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { background: #050a14; }
-    .fce { min-height: 100vh; background: #050a14; color: #e0f0ff; font-family: 'Share Tech Mono', 'Courier New', monospace; }
-    .header { padding: 28px 32px 20px; border-bottom: 1px solid rgba(0,245,255,0.15); display: flex; align-items: center; justify-content: space-between; background: rgba(5,10,26,0.95); position: sticky; top: 0; z-index: 10; }
-    .logo { font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900; letter-spacing: 3px; color: #00f5ff; text-shadow: 0 0 20px rgba(0,245,255,0.4); }
-    .logo span { color: rgba(0,245,255,0.5); font-weight: 400; font-size: 11px; display: block; letter-spacing: 5px; margin-top: 2px; }
-    .add-btn { background: transparent; border: 1px solid rgba(0,245,255,0.4); color: #00f5ff; padding: 10px 22px; font-family: inherit; font-size: 13px; cursor: pointer; letter-spacing: 2px; transition: all 0.2s; }
-    .add-btn:hover { background: rgba(0,245,255,0.1); border-color: #00f5ff; }
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding: 32px; }
-    .card { position: relative; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; overflow: hidden; transition: transform 0.25s, border-color 0.25s; height: 260px; }
-    .card:hover { transform: translateY(-4px); }
-    .card-scene { position: absolute; inset: 0; }
-    .card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 50%, transparent 100%); }
-    .card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
-    .card-name { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
-    .card-meta { font-size: 11px; letter-spacing: 2px; opacity: 0.6; }
-    .card-del { position: absolute; top: 12px; right: 12px; background: rgba(255,50,50,0.15); border: 1px solid rgba(255,50,50,0.3); color: rgba(255,100,100,0.8); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; opacity: 0; transition: opacity 0.2s; }
-    .card:hover .card-del { opacity: 1; }
-    .card-del:hover { background: rgba(255,50,50,0.3); }
-    .vis-wrap { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; }
-    .vis-scene { position: absolute; inset: 0; }
-    .vis-grad { position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.92) 40%, rgba(0,0,0,0.2) 100%); }
-    .vis-ui { position: absolute; inset: 0; display: flex; align-items: center; padding: 60px; pointer-events: none; }
-    .vis-panel { max-width: 480px; pointer-events: all; }
-    .vis-year { font-size: 11px; letter-spacing: 4px; opacity: 0.6; margin-bottom: 8px; }
-    .vis-title { font-family: 'Orbitron', monospace; font-size: 42px; font-weight: 900; line-height: 1.1; margin-bottom: 8px; }
-    .vis-loc { font-size: 12px; letter-spacing: 3px; opacity: 0.55; margin-bottom: 24px; }
-    .vis-desc { font-size: 14px; line-height: 1.8; opacity: 0.85; margin-bottom: 28px; max-width: 400px; }
-    .vis-feats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
-    .vis-feat { padding: 6px 14px; font-size: 11px; letter-spacing: 1.5px; border: 1px solid; opacity: 0.85; }
-    .vis-back { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: inherit; padding: 12px 28px; font-family: inherit; font-size: 12px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s; }
-    .vis-back:hover { background: rgba(255,255,255,0.1); }
-    .scan { position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.3; animation: scan 4s linear infinite; }
-    @keyframes scan { 0%{top:0;opacity:0.4} 50%{opacity:0.15} 100%{top:100%;opacity:0.4} }
-    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; }
-    .modal { background: #060c1e; border: 1px solid rgba(0,245,255,0.2); padding: 40px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; }
-    .modal h2 { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; color: #00f5ff; letter-spacing: 3px; margin-bottom: 28px; }
-    .field { margin-bottom: 20px; }
-    .field label { display: block; font-size: 11px; letter-spacing: 2px; opacity: 0.6; margin-bottom: 8px; }
-    .field input, .field textarea, .field select { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #e0f0ff; padding: 10px 14px; font-family: inherit; font-size: 13px; outline: none; transition: border-color 0.2s; }
-    .field input:focus, .field textarea:focus, .field select:focus { border-color: rgba(0,245,255,0.4); }
-    .field textarea { resize: vertical; min-height: 80px; }
-    .field select option { background: #060c1e; }
-    .theme-swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-    .swatch { width: 36px; height: 36px; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 9px; letter-spacing: 0.5px; color: rgba(255,255,255,0.5); flex-direction: column; gap: 2px; }
-    .swatch.active { border-color: #00f5ff; }
-    .modal-btns { display: flex; gap: 12px; margin-top: 28px; }
-    .btn-save { flex: 1; background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.4); color: #00f5ff; padding: 12px; font-family: inherit; font-size: 12px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s; }
-    .btn-save:hover { background: rgba(0,245,255,0.2); }
-    .btn-cancel { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.5); padding: 12px 24px; font-family: inherit; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s; }
-    .btn-cancel:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
-    .corner { position: absolute; width: 10px; height: 10px; }
-    .corner.tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
-    .corner.tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
-    .corner.bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
-    .corner.br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
-    .pulse-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; animation: blink 2s ease-in-out infinite; }
-    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
-    .counter { font-size: 11px; letter-spacing: 2px; opacity: 0.5; }
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{background:#050a14;}
+    .fce{min-height:100vh;background:#050a14;color:#e0f0ff;font-family:'Share Tech Mono','Courier New',monospace;}
+    .header{padding:22px 30px 18px;border-bottom:1px solid rgba(0,245,255,0.15);display:flex;align-items:center;justify-content:space-between;background:rgba(5,10,26,0.95);position:sticky;top:0;z-index:10;}
+    .logo{font-family:'Orbitron',monospace;font-size:17px;font-weight:900;letter-spacing:3px;color:#00f5ff;text-shadow:0 0 20px rgba(0,245,255,0.4);}
+    .logo span{color:rgba(0,245,255,0.5);font-weight:400;font-size:10px;display:block;letter-spacing:5px;margin-top:2px;}
+    .add-btn{background:transparent;border:1px solid rgba(0,245,255,0.4);color:#00f5ff;padding:9px 20px;font-family:inherit;font-size:12px;cursor:pointer;letter-spacing:2px;transition:all 0.2s;}
+    .add-btn:hover{background:rgba(0,245,255,0.1);}
+    .counter{font-size:11px;letter-spacing:2px;opacity:0.5;}
+    .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px;padding:28px;}
+    .card{position:relative;border:1px solid rgba(255,255,255,0.08);cursor:pointer;overflow:hidden;transition:transform 0.25s;height:245px;}
+    .card:hover{transform:translateY(-4px);}
+    .card-scene{position:absolute;inset:0;}
+    .card-ov{position:absolute;inset:0;background:linear-gradient(to top,rgba(0,0,0,0.92) 0%,rgba(0,0,0,0.22) 55%,transparent 100%);}
+    .card-info{position:absolute;bottom:0;left:0;right:0;padding:16px;}
+    .card-name{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;margin-bottom:3px;}
+    .card-meta{font-size:11px;letter-spacing:2px;opacity:0.55;}
+    .card-del{position:absolute;top:10px;right:10px;background:rgba(255,50,50,0.15);border:1px solid rgba(255,50,50,0.3);color:rgba(255,100,100,0.8);width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:12px;opacity:0;transition:opacity 0.2s;}
+    .card:hover .card-del{opacity:1;}
+    .corner{position:absolute;width:10px;height:10px;}
+    .corner.tl{top:0;left:0;border-top:2px solid;border-left:2px solid;}
+    .corner.tr{top:0;right:0;border-top:2px solid;border-right:2px solid;}
+    .corner.bl{bottom:0;left:0;border-bottom:2px solid;border-left:2px solid;}
+    .corner.br{bottom:0;right:0;border-bottom:2px solid;border-right:2px solid;}
+    /* 3D view */
+    .map-wrap{position:fixed;inset:0;display:flex;overflow:hidden;}
+    .map-info{width:320px;min-width:240px;padding:40px 30px;background:rgba(0,0,0,0.75);backdrop-filter:blur(16px);border-right:1px solid rgba(255,255,255,0.07);overflow-y:auto;display:flex;flex-direction:column;z-index:2;}
+    .map-stage{flex:1;position:relative;}
+    .map-hud{position:absolute;top:16px;right:18px;font-size:10px;letter-spacing:3px;opacity:0.45;font-family:'Share Tech Mono',monospace;}
+    .map-coord{position:absolute;bottom:16px;left:18px;font-size:10px;letter-spacing:2px;opacity:0.4;font-family:'Share Tech Mono',monospace;}
+    .v-loc{font-size:11px;letter-spacing:4px;opacity:0.6;margin-bottom:7px;}
+    .v-title{font-family:'Orbitron',monospace;font-size:30px;font-weight:900;line-height:1.1;margin-bottom:5px;}
+    .v-sub{font-size:10px;letter-spacing:3px;opacity:0.4;margin-bottom:20px;}
+    .v-desc{font-size:12.5px;line-height:1.9;opacity:0.82;margin-bottom:22px;}
+    .v-feats{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:24px;}
+    .v-feat{padding:5px 11px;font-size:10px;letter-spacing:1.5px;border:1px solid;}
+    .v-stats{border-top:1px solid rgba(255,255,255,0.07);padding-top:16px;margin-bottom:22px;}
+    .v-stat{display:flex;justify-content:space-between;margin-bottom:7px;font-size:11px;letter-spacing:2px;}
+    .v-back{background:transparent;border:1px solid rgba(255,255,255,0.22);color:inherit;padding:11px 22px;font-family:inherit;font-size:11px;letter-spacing:3px;cursor:pointer;transition:all 0.2s;margin-top:auto;}
+    .v-back:hover{background:rgba(255,255,255,0.08);}
+    .pdot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:8px;animation:blink 2s ease-in-out infinite;}
+    @keyframes blink{0%,100%{opacity:1}50%{opacity:0.12}}
+    /* Modal */
+    .mbg{position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;display:flex;align-items:center;justify-content:center;padding:24px;}
+    .modal{background:#060c1e;border:1px solid rgba(0,245,255,0.2);padding:36px;width:100%;max-width:500px;max-height:90vh;overflow-y:auto;}
+    .modal h2{font-family:'Orbitron',monospace;font-size:16px;font-weight:700;color:#00f5ff;letter-spacing:3px;margin-bottom:24px;}
+    .field{margin-bottom:16px;}
+    .field label{display:block;font-size:11px;letter-spacing:2px;opacity:0.55;margin-bottom:7px;}
+    .field input,.field textarea{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.12);color:#e0f0ff;padding:9px 13px;font-family:inherit;font-size:12px;outline:none;transition:border-color 0.2s;}
+    .field input:focus,.field textarea:focus{border-color:rgba(0,245,255,0.4);}
+    .field textarea{resize:vertical;min-height:75px;}
+    .swatches{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px;}
+    .sw{width:34px;height:34px;border:2px solid transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:2px;}
+    .sw.on{border-color:#00f5ff;}
+    .mbtns{display:flex;gap:12px;margin-top:24px;}
+    .bsave{flex:1;background:rgba(0,245,255,0.1);border:1px solid rgba(0,245,255,0.4);color:#00f5ff;padding:11px;font-family:inherit;font-size:11px;letter-spacing:3px;cursor:pointer;}
+    .bsave:hover{background:rgba(0,245,255,0.2);}
+    .bcancel{background:transparent;border:1px solid rgba(255,255,255,0.14);color:rgba(255,255,255,0.5);padding:11px 20px;font-family:inherit;font-size:11px;letter-spacing:2px;cursor:pointer;}
+    .bcancel:hover{border-color:rgba(255,255,255,0.3);color:rgba(255,255,255,0.8);}
   `;
 
+  /* ── 3D Map View ── */
   if (active) {
+    const coord = `LAT ${(seed(active.id.length)*180-90).toFixed(3)}°  LNG ${(seed(active.id.length+1)*360-180).toFixed(3)}°`;
     return (
-      <div className="fce">
-        <style>{ss}</style>
-        <div className="vis-wrap" style={{ background: active.bg }}>
-          <div className="vis-scene"><CityScene city={active} /></div>
-          <div className="vis-grad" />
-          <div className="vis-ui">
-            <div className="vis-panel">
-              <div className="vis-year">
-                <span className="pulse-dot" style={{ background: active.a1 }} />
-                {active.location}
-              </div>
-              <div className="vis-title" style={{ color: active.a1 }}>{active.name}</div>
-              <div className="vis-loc">// FUTURE CITY EXPLORER</div>
-              <div className="vis-desc">{active.description}</div>
-              <div className="vis-feats">
-                {active.features.map((f, i) => (
-                  <div key={i} className="vis-feat"
-                    style={{ borderColor: i % 2 === 0 ? active.a1 + "60" : active.a2 + "60", color: i % 2 === 0 ? active.a1 : active.a2 }}>
-                    {f}
-                  </div>
-                ))}
-              </div>
-              <button className="vis-back" onClick={() => setActive(null)}>← 都市リストへ戻る</button>
+      <div class: "fce" style: {background:active.bg}>
+        React.createElement("style", null, "{css}")
+        <div class: "map-wrap" style: {background:active.bg}>
+
+          {/* Info panel */}
+          <div class: "map-info">
+            <div class: "v-loc">
+              React.createElement("span", {class: "pdot" style: {background:active.a1}})
+              {active.location}
             </div>
+            React.createElement("div", {class: "v-title" style: {color:active.a1}}, "{active.name}")
+            React.createElement("div", {class: "v-sub"}, "// 3D ISOMETRIC CITY MAP")
+            React.createElement("div", {class: "v-desc"}, "{active.description}")
+            <div class: "v-feats">
+              {active.features.map((f,i)=>(
+                React.createElement("div", {key: i class: "v-feat"
+                  style: {borderColor:i%2===0?active.a1+"55":active.a2+"55",
+                          color:i%2===0?active.a1:active.a2}}, "{f}")
+              ))}
+            </div>
+            <div class: "v-stats">
+              {[["GRID","10×10"],["VEHICLES","10 LIVE"],["MODE","ISO 3D"],["STATUS","LIVE FEED"]].map(([k,v])=>(
+                <div class: "v-stat" key: k>
+                  React.createElement("span", {style: {opacity:0.4}}, "{k}")
+                  React.createElement("span", {style: {color:active.a1,opacity:0.85}}, "{v}")
+                </div>
+              ))}
+            </div>
+            React.createElement("button", {class: "v-back" onClick: ()=, "setActive(null)}>← 都市リストへ戻る")
           </div>
-          <div className="scan" style={{ background: active.a1 }} />
+
+          {/* 3D Stage */}
+          <div class: "map-stage">
+            React.createElement("City3DMap", {city: active})
+            React.createElement("div", {class: "map-hud" style: {color:active.a1}}, "// ISOMETRIC 3D MAP")
+            React.createElement("div", {class: "map-coord" style: {color:active.a1}}, "{coord}")
+          </div>
         </div>
       </div>
     );
   }
 
+  /* ── Grid View ── */
   return (
-    <div className="fce">
-      <style>{ss}</style>
-      <div className="header">
-        <div>
-          <div className="logo">
-            FUTURE CITY EXPLORER in 食事場
-            <span>// 未来都市探索システム v2.0</span>
-          </div>
+    <div class: "fce">
+      React.createElement("style", null, "{css}")
+      <div class: "header">
+        <div class: "logo">
+          FUTURE CITY EXPLORER in 食事場
+          React.createElement("span", null, "// 未来都市探索システム v2.0")
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <span className="counter">{cities.length} CITIES INDEXED</span>
-          <button className="add-btn" onClick={() => setShowAdd(true)}>+ 新都市を登録</button>
+        <div style: {display:"flex",alignItems:"center",gap:18}>
+          React.createElement("span", {class: "counter"}, "{cities.length} CITIES INDEXED")
+          React.createElement("button", {class: "add-btn" onClick: ()=, "setShowAdd(true)}>+ 新都市を登録")
         </div>
       </div>
 
-      <div className="grid">
-        {cities.map(city => (
-          <div key={city.id} className="card" onClick={() => setActive(city)}
-            style={{ borderColor: `${city.a1}25` }}>
-            <div className="card-scene"><CityScene city={city} /></div>
-            <div className="card-overlay" />
-            <div className="corner tl" style={{ borderColor: city.a1 + "80" }} />
-            <div className="corner tr" style={{ borderColor: city.a1 + "80" }} />
-            <div className="corner bl" style={{ borderColor: city.a1 + "80" }} />
-            <div className="corner br" style={{ borderColor: city.a1 + "80" }} />
-            <div className="card-info">
-              <div className="card-name" style={{ color: city.a1 }}>{city.name}</div>
-              <div className="card-meta">{city.location}</div>
+      <div class: "grid">
+        {cities.map(city=>(
+          <div key: city.id class: "card" onClick: ()=>setActive(city)
+            style: {borderColor:`${city.a122`}}>
+            <div class: "card-scene">React.createElement("CityScene", {city: city})</div>
+            React.createElement("div", {class: "card-ov"})
+            React.createElement("div", {class: "corner tl" style: {borderColor:city.a1+"70"}})
+            React.createElement("div", {class: "corner tr" style: {borderColor:city.a1+"70"}})
+            React.createElement("div", {class: "corner bl" style: {borderColor:city.a1+"70"}})
+            React.createElement("div", {class: "corner br" style: {borderColor:city.a1+"70"}})
+            <div class: "card-info">
+              React.createElement("div", {class: "card-name" style: {color:city.a1}}, "{city.name}")
+              React.createElement("div", {class: "card-meta"}, "{city.location}")
             </div>
-            {city.scene === "custom" && (
-              <div className="card-del" onClick={e => { e.stopPropagation(); removeCity(city.id); }}>✕</div>
+            {city.scene==="custom"&&(
+              React.createElement("div", {class: "card-del" onClick: e=, "{e.stopPropagation();removeCity(city.id);}}>✕")
             )}
           </div>
         ))}
-
-        <div className="card" style={{ border: "1px dashed rgba(0,245,255,0.2)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12 }}
-          onClick={() => setShowAdd(true)}>
-          <div style={{ fontSize: 32, color: "rgba(0,245,255,0.3)" }}>+</div>
-          <div style={{ fontSize: 11, letterSpacing: 3, color: "rgba(0,245,255,0.4)" }}>新しい未来都市を追加</div>
+        <div class: "card" onClick: ()=>setShowAdd(true)
+          style: {border:"1px dashed rgba(0,245,255,0.2)",cursor:"pointer",display:"flex",alignItems:"center",justifyContent:"center",flexDirection:"column",gap:10}>
+          React.createElement("div", {style: {fontSize:28,color:"rgba(0,245,255,0.3)"}}, "+")
+          React.createElement("div", {style: {fontSize:10,letterSpacing:3,color:"rgba(0,245,255,0.4)"}}, "新しい未来都市を追加")
         </div>
       </div>
 
-      {showAdd && (
-        <div className="modal-bg" onClick={e => e.target === e.currentTarget && setShowAdd(false)}>
-          <div className="modal">
-            <h2>// 新都市データを登録</h2>
-
-            <div className="field">
-              <label>都市名 *</label>
-              <input placeholder="例：ネオ大阪、月面コロニーα" value={form.name}
-                onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+      {showAdd&&(
+        <div class: "mbg" onClick: e=>e.target===e.currentTarget&&setShowAdd(false)>
+          <div class: "modal">
+            React.createElement("h2", null, "// 新都市データを登録")
+            <div class: "field">
+              React.createElement("label", null, "都市名 *")
+              <input placeholder: "例：ネオ大阪、月面コロニーα" value: form.name
+                onChange: e=>setForm(f=>({...f,name:e.target.value))}/>
             </div>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
-              <div className="field">
-                <label>場所 / 座標</label>
-                <input placeholder="例：火星 / 北緯45°" value={form.location}
-                  onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
-              </div>
+            <div class: "field">
+              React.createElement("label", null, "場所 / 座標")
+              <input placeholder: "例：火星 / 北緯45°" value: form.location
+                onChange: e=>setForm(f=>({...f,location:e.target.value))}/>
             </div>
-            <div className="field">
-              <label>都市の説明</label>
-              <textarea placeholder="この都市の特徴、技術、文化について..." value={form.description}
-                onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+            <div class: "field">
+              React.createElement("label", null, "都市の説明")
+              <textarea placeholder: "この都市の特徴、技術、文化について..." value: form.description
+                onChange: e=>setForm(f=>({...f,description:e.target.value))}/>
             </div>
-            <div className="field">
-              <label>主要テクノロジー（1行に1つ）</label>
-              <textarea placeholder={"核融合発電\n量子コンピュータ\nナノマシン医療"} value={form.features}
-                onChange={e => setForm(f => ({ ...f, features: e.target.value }))} style={{ minHeight: 90 }} />
+            <div class: "field">
+              React.createElement("label", null, "主要テクノロジー（1行に1つ）")
+              <textarea placeholder: "核融合発電\n量子コンピュータ\nナノマシン医療" value: form.features
+                onChange: e=>setForm(f=>({...f,features:e.target.value))} style: {minHeight:85}/>
             </div>
-            <div className="field">
-              <label>ビジュアルテーマ</label>
-              <div className="theme-swatches">
-                {THEMES.map((t, i) => (
-                  <div key={i} className={`swatch${form.themeIdx === i ? " active" : ""}`}
-                    style={{ background: t.bg, borderColor: form.themeIdx === i ? t.a1 : "transparent" }}
-                    onClick={() => setForm(f => ({ ...f, themeIdx: i }))}>
-                    <div style={{ width: 14, height: 4, background: t.a1, borderRadius: 2 }} />
-                    <div style={{ width: 10, height: 3, background: t.a2, borderRadius: 2 }} />
-                  </div>
+            <div class: "field">
+              React.createElement("label", null, "ビジュアルテーマ")
+              <div class: "swatches">
+                {THEMES.map((t,i)=>(
+                  <div key: i class: `sw${form.themeIdx===i?" on":""`}
+                    style: {background:t.bg,borderColor:form.themeIdx===i?t.a1:"transparent"}
+                    onClick: ()=>setForm(f=>({...f,themeIdx:i))}>
+                    React.createElement("div", {style: {width:13,height:4,background:t.a1,borderRadius:2}})
+                    React.createElement("div", {style: {width:9,height:3,background:t.a2,borderRadius:2}/}, "")
                 ))}
               </div>
             </div>
-
-            <div className="modal-btns">
-              <button className="btn-cancel" onClick={() => setShowAdd(false)}>キャンセル</button>
-              <button className="btn-save" onClick={saveCity}>// 都市を登録する</button>
+            <div class: "mbtns">
+              React.createElement("button", {class: "bcancel" onClick: ()=, "setShowAdd(false)}>キャンセル")
+              React.createElement("button", {class: "bsave" onClick: saveCity}, "// 都市を登録する")
             </div>
           </div>
         </div>
