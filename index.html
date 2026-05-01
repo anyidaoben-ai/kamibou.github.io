@@ -1,665 +1,470 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>PARADISE PROJECT — 未来都市への扉</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@100;300;400;600&family=Noto+Serif+JP:wght@300;400;700&display=swap" rel="stylesheet"/>
-<style>
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-  :root{
-    --forest:#0d2918;
-    --moss:#1a4a2e;
-    --leaf:#2d7a4a;
-    --mint:#5ec48a;
-    --pale:#c8f0d8;
-    --sky:#0b1f35;
-    --neon:#00e8b0;
-    --glow:#7dffc4;
-    --star:#e8f5ff;
-    --gold:#c8a84b;
-    --sand:#f5ead0;
-    --paper:#faf7f0;
-    --serif:'Noto Serif JP',Georgia,serif;
-    --sans:'Josefin Sans',sans-serif;
+import { useState, useEffect, useRef } from "react";
+
+const seed = (n) => {
+  let x = Math.sin(n + 1) * 43758.5453;
+  return x - Math.floor(x);
+};
+
+const STAR_DATA = Array.from({ length: 80 }, (_, i) => ({
+  cx: seed(i * 3) * 800,
+  cy: seed(i * 3 + 1) * 400,
+  r: seed(i * 3 + 2) > 0.85 ? 1.8 : 0.9,
+  op: 0.3 + seed(i) * 0.65,
+}));
+
+function Stars() {
+  return (
+    <>
+      {STAR_DATA.map((s, i) => (
+        <circle key={i} cx={s.cx} cy={s.cy} r={s.r} fill="white" opacity={s.op} />
+      ))}
+    </>
+  );
+}
+
+function TokyoScene({ a1, a2 }) {
+  const blds = [
+    { x: 20, y: 200, w: 50, h: 300 }, { x: 80, y: 240, w: 35, h: 260 },
+    { x: 125, y: 160, w: 60, h: 340 }, { x: 200, y: 220, w: 40, h: 280 },
+    { x: 250, y: 180, w: 55, h: 320 }, { x: 320, y: 130, w: 70, h: 370 },
+    { x: 405, y: 200, w: 45, h: 300 }, { x: 460, y: 170, w: 55, h: 330 },
+    { x: 530, y: 140, w: 65, h: 360 }, { x: 610, y: 190, w: 50, h: 310 },
+    { x: 675, y: 230, w: 40, h: 270 }, { x: 725, y: 200, w: 55, h: 300 },
+  ];
+  return (
+    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
+      <Stars />
+      <circle cx={680} cy={70} r={40} fill="#b8d4ff" opacity={0.85} />
+      <circle cx={695} cy={62} r={40} fill="#050a1a" opacity={0.55} />
+      {blds.map((b, i) => (
+        <g key={i}>
+          <rect x={b.x} y={b.y} width={b.w} height={b.h}
+            fill={`hsl(${215 + i * 8},45%,${7 + (i % 4) * 3}%)`} />
+          {Array.from({ length: Math.floor(b.h / 30) }, (_, r) => (
+            <rect key={r} x={b.x + 6} y={b.y + r * 30 + 10} width={8} height={6}
+              fill={seed(i * 100 + r) > 0.55 ? a1 : a2}
+              opacity={0.5 + seed(i + r) * 0.45} />
+          ))}
+        </g>
+      ))}
+      <path d="M0,310 Q200,285 400,300 Q600,315 800,295" stroke={a1} strokeWidth={2.5} fill="none" opacity={0.7} />
+      <path d="M0,340 Q300,315 550,335 Q680,345 800,325" stroke={a2} strokeWidth={1.8} fill="none" opacity={0.5} />
+      <ellipse cx={160} cy={298} rx={18} ry={6} fill={a1} opacity={0.95} />
+      <ellipse cx={480} cy={320} rx={14} ry={5} fill={a2} opacity={0.9} />
+      <ellipse cx={690} cy={308} rx={16} ry={5} fill={a1} opacity={0.85} />
+      <rect x={0} y={455} width={800} height={45} fill="hsl(220,50%,4%)" />
+      <rect x={0} y={450} width={800} height={10} fill={a1} opacity={0.12} />
+    </svg>
+  );
+}
+
+function MarsScene({ a1, a2 }) {
+  return (
+    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
+      {STAR_DATA.slice(0, 50).map((s, i) => (
+        <circle key={i} cx={s.cx} cy={s.cy * 0.7} r={s.r} fill="white" opacity={s.op * 0.7} />
+      ))}
+      <ellipse cx={120} cy={90} rx={25} ry={15} fill="#ff8c6b" opacity={0.7} />
+      <rect x={0} y={300} width={800} height={200} fill="#8b3a1a" />
+      <ellipse cx={400} cy={302} rx={600} ry={40} fill="#6b2a0f" />
+      <ellipse cx={150} cy={295} rx={100} ry={15} fill="#7a3015" />
+      <ellipse cx={650} cy={298} rx={80} ry={12} fill="#7a3015" />
+      <ellipse cx={400} cy={240} rx={320} ry={200} fill="none" stroke={a1} strokeWidth={3} opacity={0.4} />
+      <ellipse cx={400} cy={240} rx={310} ry={192} fill="#1a0805" opacity={0.85} />
+      <rect x={380} y={60} width={40} height={180} fill={`hsl(20,30%,15%)`} />
+      <ellipse cx={400} cy={60} rx={60} ry={20} fill={a2} opacity={0.3} />
+      {[200, 260, 320, 380, 440, 500, 560].map((x, i) => (
+        <g key={i}>
+          <rect x={x} y={180 - i % 3 * 25} width={30} height={100 + i % 3 * 25} fill={`hsl(20,25%,${10 + i % 3 * 4}%)`} />
+          <rect x={x + 5} y={185 - i % 3 * 25} width={8} height={6} fill={a1} opacity={0.7} />
+        </g>
+      ))}
+      <path d="M300,240 Q400,220 500,240" stroke={a2} strokeWidth={2} fill="none" opacity={0.6} strokeDasharray="8,4" />
+    </svg>
+  );
+}
+
+function AquaScene({ a1, a2 }) {
+  return (
+    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
+      <rect x={0} y={0} width={800} height={500} fill="#020d18" />
+      {Array.from({ length: 30 }, (_, i) => (
+        <circle key={i} cx={seed(i * 7) * 800} cy={seed(i * 7 + 1) * 500}
+          r={seed(i * 7 + 2) * 4 + 1} fill={a1} opacity={0.04 + seed(i) * 0.08} />
+      ))}
+      {Array.from({ length: 40 }, (_, i) => (
+        <circle key={i} cx={seed(i * 5 + 200) * 800} cy={seed(i * 5 + 201) * 400 + 50}
+          r={1} fill="white" opacity={0.1 + seed(i) * 0.2} />
+      ))}
+      <ellipse cx={400} cy={250} rx={300} ry={230} fill="none" stroke={a1} strokeWidth={4} opacity={0.5} />
+      <ellipse cx={400} cy={250} rx={290} ry={222} fill="#030f1f" opacity={0.9} />
+      {[200, 260, 320, 380, 440, 500, 560].map((x, i) => (
+        <g key={i}>
+          <rect x={x - 12} y={210 - i % 4 * 18} width={24} height={80 + i % 4 * 18} fill={`hsl(195,40%,${8 + i % 3 * 4}%)`} />
+          <rect x={x - 5} y={215} width={6} height={5} fill={a2} opacity={0.7} />
+        </g>
+      ))}
+      {Array.from({ length: 15 }, (_, i) => (
+        <path key={i} d={`M${seed(i * 11) * 800},${400 + seed(i * 11 + 1) * 80} Q${seed(i * 11 + 2) * 800},${350 + seed(i * 11 + 3) * 80} ${seed(i * 11 + 4) * 800},${420 + seed(i * 11 + 5) * 60}`}
+          stroke={i % 2 === 0 ? "#ff7f50" : "#20b2aa"} strokeWidth={1} fill="none" opacity={0.3 + seed(i) * 0.4} />
+      ))}
+      <ellipse cx={400} cy={80} rx={350} ry={60} fill="#00d4ff" opacity={0.06} />
+      <text x={400} y={420} textAnchor="middle" fill={a1} fontSize={11} opacity={0.5} fontFamily="monospace">DEPTH: 300m</text>
+    </svg>
+  );
+}
+
+function SkyScene({ a1, a2 }) {
+  return (
+    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
+      <Stars />
+      {[100, 200, 350, 500, 650].map((cx, i) => (
+        <ellipse key={i} cx={cx} cy={350 + i * 10} rx={130 + i * 20} ry={30 + i * 8}
+          fill="white" opacity={0.04 + i * 0.02} />
+      ))}
+      {[
+        { x: 120, y: 280, w: 200, h: 60 },
+        { x: 380, y: 220, w: 240, h: 70 },
+        { x: 560, y: 300, w: 180, h: 55 },
+        { x: 50, y: 350, w: 160, h: 50 },
+        { x: 620, y: 380, w: 150, h: 48 },
+      ].map((p, i) => (
+        <g key={i}>
+          <ellipse cx={p.x + p.w / 2} cy={p.y + p.h / 2} rx={p.w / 2} ry={p.h / 2}
+            fill={`hsl(${220 + i * 15},30%,${10 + i % 3 * 4}%)`}
+            stroke={i === 1 ? a1 : a2} strokeWidth={1.5} opacity={0.9} />
+          {Array.from({ length: 5 }, (_, j) => (
+            <rect key={j} x={p.x + 15 + j * 35} y={p.y + 10} width={20} height={25}
+              fill={`hsl(${220 + i * 15},30%,${15 + j % 3 * 5}%)`} />
+          ))}
+          <rect x={p.x + p.w / 2 - 4} y={p.y - 30} width={8} height={35} fill={a1} opacity={0.6} />
+          <circle cx={p.x + p.w / 2} cy={p.y - 35} r={6} fill={a2} opacity={0.8} />
+        </g>
+      ))}
+      <path d="M220,295 L380,235" stroke={a1} strokeWidth={1.5} strokeDasharray="6,4" opacity={0.5} />
+      <path d="M620,300 L620,230" stroke={a2} strokeWidth={1.5} strokeDasharray="6,4" opacity={0.5} />
+    </svg>
+  );
+}
+
+function CustomScene({ a1, a2, name }) {
+  const letters = name.slice(0, 2).toUpperCase();
+  return (
+    <svg viewBox="0 0 800 500" style={{ width: "100%", height: "100%", position: "absolute", inset: 0 }}>
+      <Stars />
+      {Array.from({ length: 10 }, (_, i) => (
+        <g key={i}>
+          <rect x={seed(i * 13) * 700 + 30} y={200 + seed(i * 13 + 1) * 100}
+            width={40 + seed(i * 13 + 2) * 60} height={120 + seed(i * 13 + 3) * 180}
+            fill={`hsl(${210 + i * 18},40%,${8 + i % 4 * 3}%)`} />
+        </g>
+      ))}
+      <circle cx={400} cy={230} r={120} fill="none" stroke={a1} strokeWidth={2} opacity={0.35} strokeDasharray="12,6" />
+      <circle cx={400} cy={230} r={80} fill="none" stroke={a2} strokeWidth={1.5} opacity={0.25} />
+      <text x={400} y={245} textAnchor="middle" fontSize={64} fontWeight={700}
+        fill={a1} opacity={0.2} fontFamily="monospace">{letters}</text>
+      <rect x={0} y={455} width={800} height={45} fill="hsl(220,50%,4%)" />
+      <rect x={0} y={450} width={800} height={8} fill={a1} opacity={0.15} />
+    </svg>
+  );
+}
+
+const BUILTIN_CITIES = [
+  {
+    id: "neo-tokyo",
+    name: "ネオ東京",
+    year: 2087,
+    location: "東京湾岸",
+    description: "AIが管理する超高密度都市。空中回廊と垂直農場が幾重にも重なり、300万人が空中で暮らす未来の首都。夜には無数のネオンが海面を染める。",
+    features: ["空中交通システム", "垂直農場タワー", "量子ネットワーク", "AIガバナンス"],
+    bg: "#050a1a", a1: "#00f5ff", a2: "#ff0090", scene: "tokyo",
+  },
+  {
+    id: "mars-dome",
+    name: "マーズドーム",
+    year: 2145,
+    location: "火星 / オリンポス山麓",
+    description: "巨大ドームに守られた人類初の惑星間都市。赤い砂漠の中に1万人が暮らし、テラフォーミング研究の最前線として機能する。",
+    features: ["大気生成装置", "地熱エネルギー", "軌道エレベーター", "バイオドーム農場"],
+    bg: "#1a0805", a1: "#ff6b35", a2: "#ffd700", scene: "mars",
+  },
+  {
+    id: "aqua-city",
+    name: "アクアシティ",
+    year: 2110,
+    location: "太平洋 / 深度300m",
+    description: "海底に広がる透明ドームの都市群。太陽光が届かない世界で、海洋資源の持続可能な活用と深海研究が行われる神秘の都。",
+    features: ["海流発電", "珊瑚礁再生プログラム", "深海採掘", "バイオルミネッセンス照明"],
+    bg: "#020d18", a1: "#00d4ff", a2: "#40e0d0", scene: "aqua",
+  },
+  {
+    id: "sky-haven",
+    name: "スカイヘイブン",
+    year: 2099,
+    location: "成層圏 / 高度40km",
+    description: "浮遊プラットフォームで構成される空中都市群。反重力推進技術により常に理想の気候帯を漂い、太陽光と風力で完全エネルギー自給を達成。",
+    features: ["反重力推進エンジン", "太陽光発電帯", "雲雨水収集システム", "空中農園"],
+    bg: "#05101f", a1: "#a78bfa", a2: "#34d399", scene: "sky",
+  },
+];
+
+function CityScene({ city }) {
+  const props = { a1: city.a1, a2: city.a2 };
+  if (city.scene === "tokyo") return <TokyoScene {...props} />;
+  if (city.scene === "mars") return <MarsScene {...props} />;
+  if (city.scene === "aqua") return <AquaScene {...props} />;
+  if (city.scene === "sky") return <SkyScene {...props} />;
+  return <CustomScene {...props} name={city.name} />;
+}
+
+const THEMES = [
+  { label: "サイバーパンク", bg: "#050a1a", a1: "#00f5ff", a2: "#ff0090" },
+  { label: "砂漠・惑星", bg: "#1a0805", a1: "#ff6b35", a2: "#ffd700" },
+  { label: "深海・水中", bg: "#020d18", a1: "#00d4ff", a2: "#40e0d0" },
+  { label: "成層圏・空", bg: "#05101f", a1: "#a78bfa", a2: "#34d399" },
+  { label: "核融合都市", bg: "#0d0020", a1: "#ff4aff", a2: "#ffe44a" },
+  { label: "氷河文明", bg: "#030a18", a1: "#b3e5fc", a2: "#80cbc4" },
+];
+
+export default function FutureCityExplorer() {
+  const [cities, setCities] = useState(BUILTIN_CITIES);
+  const [active, setActive] = useState(null);
+  const [showAdd, setShowAdd] = useState(false);
+  const [form, setForm] = useState({ name: "", year: 2100, location: "", description: "", features: "", themeIdx: 0 });
+  const [pulse, setPulse] = useState(0);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await window.storage.get("user-cities");
+        if (r) {
+          const saved = JSON.parse(r.value);
+          if (Array.isArray(saved) && saved.length) {
+            setCities([...BUILTIN_CITIES, ...saved]);
+          }
+        }
+      } catch (_) {}
+    })();
+    const t = setInterval(() => setPulse(p => p + 1), 2000);
+    return () => clearInterval(t);
+  }, []);
+
+  async function saveCity() {
+    if (!form.name.trim()) return;
+    const t = THEMES[form.themeIdx];
+    const newCity = {
+      id: `custom-${Date.now()}`,
+      name: form.name,
+      year: Number(form.year),
+      location: form.location,
+      description: form.description,
+      features: form.features.split("\n").filter(f => f.trim()),
+      bg: t.bg, a1: t.a1, a2: t.a2,
+      scene: "custom",
+    };
+    const custom = cities.filter(c => c.scene === "custom");
+    const next = [...custom, newCity];
+    try { await window.storage.set("user-cities", JSON.stringify(next)); } catch (_) {}
+    setCities([...BUILTIN_CITIES, ...next]);
+    setShowAdd(false);
+    setForm({ name: "", year: 2100, location: "", description: "", features: "", themeIdx: 0 });
   }
 
-  html{scroll-behavior:smooth}
-
-  body{
-    background:var(--forest);
-    color:var(--pale);
-    font-family:var(--sans);
-    font-weight:300;
-    overflow-x:hidden;
+  function removeCity(id) {
+    const next = cities.filter(c => c.id !== id);
+    const custom = next.filter(c => c.scene === "custom");
+    try { window.storage.set("user-cities", JSON.stringify(custom)); } catch (_) {}
+    setCities(next);
+    if (active?.id === id) setActive(null);
   }
 
-  /* ── LOADER ── */
-  #loader{
-    position:fixed;inset:0;z-index:999;
-    background:var(--forest);
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    transition:opacity 1s ease;
-  }
-  #loader.out{opacity:0;pointer-events:none}
-  .loader-circle{
-    width:80px;height:80px;
-    border-radius:50%;
-    border:1px solid var(--mint);
-    border-top-color:transparent;
-    animation:spin 1.2s linear infinite;
-    margin-bottom:1.5rem;
-  }
-  @keyframes spin{to{transform:rotate(360deg)}}
-  .loader-text{
-    font-size:.7rem;letter-spacing:.4em;
-    color:var(--mint);text-transform:uppercase;
+  const ss = `
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap');
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #050a14; }
+    .fce { min-height: 100vh; background: #050a14; color: #e0f0ff; font-family: 'Share Tech Mono', 'Courier New', monospace; }
+    .header { padding: 28px 32px 20px; border-bottom: 1px solid rgba(0,245,255,0.15); display: flex; align-items: center; justify-content: space-between; background: rgba(5,10,26,0.95); position: sticky; top: 0; z-index: 10; }
+    .logo { font-family: 'Orbitron', monospace; font-size: 20px; font-weight: 900; letter-spacing: 3px; color: #00f5ff; text-shadow: 0 0 20px rgba(0,245,255,0.4); }
+    .logo span { color: rgba(0,245,255,0.5); font-weight: 400; font-size: 11px; display: block; letter-spacing: 5px; margin-top: 2px; }
+    .add-btn { background: transparent; border: 1px solid rgba(0,245,255,0.4); color: #00f5ff; padding: 10px 22px; font-family: inherit; font-size: 13px; cursor: pointer; letter-spacing: 2px; transition: all 0.2s; }
+    .add-btn:hover { background: rgba(0,245,255,0.1); border-color: #00f5ff; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; padding: 32px; }
+    .card { position: relative; border: 1px solid rgba(255,255,255,0.08); cursor: pointer; overflow: hidden; transition: transform 0.25s, border-color 0.25s; height: 260px; }
+    .card:hover { transform: translateY(-4px); }
+    .card-scene { position: absolute; inset: 0; }
+    .card-overlay { position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.3) 50%, transparent 100%); }
+    .card-info { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
+    .card-name { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+    .card-meta { font-size: 11px; letter-spacing: 2px; opacity: 0.6; }
+    .card-del { position: absolute; top: 12px; right: 12px; background: rgba(255,50,50,0.15); border: 1px solid rgba(255,50,50,0.3); color: rgba(255,100,100,0.8); width: 28px; height: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; opacity: 0; transition: opacity 0.2s; }
+    .card:hover .card-del { opacity: 1; }
+    .card-del:hover { background: rgba(255,50,50,0.3); }
+    .vis-wrap { position: fixed; inset: 0; z-index: 100; display: flex; flex-direction: column; }
+    .vis-scene { position: absolute; inset: 0; }
+    .vis-grad { position: absolute; inset: 0; background: linear-gradient(to right, rgba(0,0,0,0.92) 40%, rgba(0,0,0,0.2) 100%); }
+    .vis-ui { position: absolute; inset: 0; display: flex; align-items: center; padding: 60px; pointer-events: none; }
+    .vis-panel { max-width: 480px; pointer-events: all; }
+    .vis-year { font-size: 11px; letter-spacing: 4px; opacity: 0.6; margin-bottom: 8px; }
+    .vis-title { font-family: 'Orbitron', monospace; font-size: 42px; font-weight: 900; line-height: 1.1; margin-bottom: 8px; }
+    .vis-loc { font-size: 12px; letter-spacing: 3px; opacity: 0.55; margin-bottom: 24px; }
+    .vis-desc { font-size: 14px; line-height: 1.8; opacity: 0.85; margin-bottom: 28px; max-width: 400px; }
+    .vis-feats { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .vis-feat { padding: 6px 14px; font-size: 11px; letter-spacing: 1.5px; border: 1px solid; opacity: 0.85; }
+    .vis-back { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: inherit; padding: 12px 28px; font-family: inherit; font-size: 12px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s; }
+    .vis-back:hover { background: rgba(255,255,255,0.1); }
+    .scan { position: absolute; top: 0; left: 0; right: 0; height: 2px; opacity: 0.3; animation: scan 4s linear infinite; }
+    @keyframes scan { 0%{top:0;opacity:0.4} 50%{opacity:0.15} 100%{top:100%;opacity:0.4} }
+    .modal-bg { position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 24px; }
+    .modal { background: #060c1e; border: 1px solid rgba(0,245,255,0.2); padding: 40px; width: 100%; max-width: 540px; max-height: 90vh; overflow-y: auto; }
+    .modal h2 { font-family: 'Orbitron', monospace; font-size: 18px; font-weight: 700; color: #00f5ff; letter-spacing: 3px; margin-bottom: 28px; }
+    .field { margin-bottom: 20px; }
+    .field label { display: block; font-size: 11px; letter-spacing: 2px; opacity: 0.6; margin-bottom: 8px; }
+    .field input, .field textarea, .field select { width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.12); color: #e0f0ff; padding: 10px 14px; font-family: inherit; font-size: 13px; outline: none; transition: border-color 0.2s; }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: rgba(0,245,255,0.4); }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field select option { background: #060c1e; }
+    .theme-swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .swatch { width: 36px; height: 36px; border: 2px solid transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 9px; letter-spacing: 0.5px; color: rgba(255,255,255,0.5); flex-direction: column; gap: 2px; }
+    .swatch.active { border-color: #00f5ff; }
+    .modal-btns { display: flex; gap: 12px; margin-top: 28px; }
+    .btn-save { flex: 1; background: rgba(0,245,255,0.1); border: 1px solid rgba(0,245,255,0.4); color: #00f5ff; padding: 12px; font-family: inherit; font-size: 12px; letter-spacing: 3px; cursor: pointer; transition: all 0.2s; }
+    .btn-save:hover { background: rgba(0,245,255,0.2); }
+    .btn-cancel { background: transparent; border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.5); padding: 12px 24px; font-family: inherit; font-size: 12px; letter-spacing: 2px; cursor: pointer; transition: all 0.2s; }
+    .btn-cancel:hover { border-color: rgba(255,255,255,0.3); color: rgba(255,255,255,0.8); }
+    .corner { position: absolute; width: 10px; height: 10px; }
+    .corner.tl { top: 0; left: 0; border-top: 2px solid; border-left: 2px solid; }
+    .corner.tr { top: 0; right: 0; border-top: 2px solid; border-right: 2px solid; }
+    .corner.bl { bottom: 0; left: 0; border-bottom: 2px solid; border-left: 2px solid; }
+    .corner.br { bottom: 0; right: 0; border-bottom: 2px solid; border-right: 2px solid; }
+    .pulse-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; margin-right: 8px; animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+    .counter { font-size: 11px; letter-spacing: 2px; opacity: 0.5; }
+  `;
+
+  if (active) {
+    return (
+      <div className="fce">
+        <style>{ss}</style>
+        <div className="vis-wrap" style={{ background: active.bg }}>
+          <div className="vis-scene"><CityScene city={active} /></div>
+          <div className="vis-grad" />
+          <div className="vis-ui">
+            <div className="vis-panel">
+              <div className="vis-year">
+                <span className="pulse-dot" style={{ background: active.a1 }} />
+                {active.location}
+              </div>
+              <div className="vis-title" style={{ color: active.a1 }}>{active.name}</div>
+              <div className="vis-loc">// FUTURE CITY EXPLORER</div>
+              <div className="vis-desc">{active.description}</div>
+              <div className="vis-feats">
+                {active.features.map((f, i) => (
+                  <div key={i} className="vis-feat"
+                    style={{ borderColor: i % 2 === 0 ? active.a1 + "60" : active.a2 + "60", color: i % 2 === 0 ? active.a1 : active.a2 }}>
+                    {f}
+                  </div>
+                ))}
+              </div>
+              <button className="vis-back" onClick={() => setActive(null)}>← 都市リストへ戻る</button>
+            </div>
+          </div>
+          <div className="scan" style={{ background: active.a1 }} />
+        </div>
+      </div>
+    );
   }
 
-  /* ── NAV ── */
-  nav{
-    position:fixed;top:0;left:0;right:0;z-index:100;
-    display:flex;align-items:center;justify-content:space-between;
-    padding:1.5rem 4rem;
-    border-bottom:1px solid rgba(94,196,138,.12);
-    background:rgba(13,41,24,.8);
-    backdrop-filter:blur(12px);
-  }
-  .nav-logo{
-    font-family:var(--sans);font-weight:600;font-size:.85rem;
-    letter-spacing:.3em;color:var(--neon);
-  }
-  .nav-links{display:flex;gap:2.5rem;list-style:none}
-  .nav-links a{
-    font-size:.7rem;letter-spacing:.2em;color:var(--pale);
-    text-decoration:none;transition:color .3s;
-  }
-  .nav-links a:hover{color:var(--neon)}
-
-  @media(max-width:680px){
-    nav{padding:1.2rem 1.5rem}
-    .nav-links{display:none}
-  }
-
-  /* ── HERO ── */
-  #hero{
-    position:relative;height:100vh;min-height:600px;
-    display:flex;align-items:center;justify-content:center;
-    overflow:hidden;
-  }
-
-  /* SVGアニメーション背景 */
-  .hero-bg{position:absolute;inset:0;width:100%;height:100%;z-index:0}
-
-  .hero-content{
-    position:relative;z-index:2;text-align:center;
-    padding:0 2rem;
-    animation:fadeUp 1.4s ease both;
-    animation-delay:.8s;
-  }
-  @keyframes fadeUp{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:none}}
-
-  .hero-eyebrow{
-    font-size:.65rem;letter-spacing:.5em;text-transform:uppercase;
-    color:var(--neon);margin-bottom:1.5rem;
-    display:flex;align-items:center;justify-content:center;gap:1rem;
-  }
-  .hero-eyebrow::before,.hero-eyebrow::after{
-    content:'';display:block;width:40px;height:1px;background:var(--neon);opacity:.5;
-  }
-
-  .hero-title{
-    font-family:var(--serif);
-    font-size:clamp(2.8rem,8vw,6rem);
-    font-weight:300;line-height:1.05;
-    color:var(--star);letter-spacing:-.02em;
-    margin-bottom:1rem;
-  }
-  .hero-title strong{color:var(--neon);font-weight:700}
-
-  .hero-sub{
-    font-size:clamp(.75rem,1.8vw,1rem);
-    letter-spacing:.15em;color:var(--pale);opacity:.75;
-    margin-bottom:3rem;
-  }
-
-  .hero-scroll{
-    display:inline-flex;flex-direction:column;align-items:center;
-    gap:.5rem;font-size:.6rem;letter-spacing:.3em;color:var(--mint);
-    text-decoration:none;
-  }
-  .scroll-bar{
-    width:1px;height:60px;background:linear-gradient(to bottom,var(--mint),transparent);
-    animation:scrollPulse 2s ease-in-out infinite;
-  }
-  @keyframes scrollPulse{
-    0%,100%{transform:scaleY(1);opacity:1}
-    50%{transform:scaleY(.5);opacity:.4}
-  }
-
-  /* ── SECTIONS ── */
-  section{padding:clamp(5rem,12vw,10rem) clamp(1.5rem,6vw,5rem)}
-  .container{max-width:1100px;margin:0 auto}
-
-  .label{
-    font-size:.65rem;letter-spacing:.4em;text-transform:uppercase;
-    color:var(--neon);margin-bottom:1rem;
-    display:flex;align-items:center;gap:.8rem;
-  }
-  .label::after{content:'';flex:1;height:1px;background:rgba(94,196,138,.25)}
-
-  .section-title{
-    font-family:var(--serif);
-    font-size:clamp(1.8rem,4vw,3.2rem);
-    font-weight:300;line-height:1.2;color:var(--star);
-    margin-bottom:1.5rem;
-  }
-  .section-title em{font-style:normal;color:var(--neon)}
-
-  /* ── INTRO / MANIFEST ── */
-  #manifest{background:var(--moss)}
-
-  .manifest-inner{
-    display:grid;grid-template-columns:1fr 1fr;
-    gap:clamp(3rem,8vw,7rem);align-items:center;
-  }
-
-  .manifest-visual{
-    position:relative;aspect-ratio:4/5;
-  }
-
-  .city-canvas{width:100%;height:100%}
-
-  .manifest-text p{
-    color:var(--pale);opacity:.85;line-height:1.9;
-    font-size:clamp(.85rem,1.5vw,.95rem);margin-bottom:1.2rem;
-  }
-  .manifest-quote{
-    margin-top:2rem;padding-left:1.5rem;
-    border-left:2px solid var(--neon);
-    font-family:var(--serif);font-size:1.1rem;
-    color:var(--glow);line-height:1.6;
-  }
-
-  @media(max-width:760px){
-    .manifest-inner{grid-template-columns:1fr}
-    .manifest-visual{aspect-ratio:16/9}
-  }
-
-  /* ── PILLARS ── */
-  #pillars{background:var(--forest)}
-
-  .pillars-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:1.5px;margin-top:4rem;
-  }
-
-  .pillar{
-    padding:3rem 2.5rem;
-    border:1px solid rgba(94,196,138,.12);
-    transition:background .3s,border-color .3s;
-    position:relative;overflow:hidden;
-  }
-  .pillar::before{
-    content:'';position:absolute;top:0;left:0;right:0;height:2px;
-    background:var(--neon);transform:scaleX(0);transform-origin:left;
-    transition:transform .4s ease;
-  }
-  .pillar:hover{background:rgba(94,196,138,.05);border-color:rgba(94,196,138,.3)}
-  .pillar:hover::before{transform:scaleX(1)}
-
-  .pillar-num{
-    font-size:3rem;font-weight:100;color:rgba(94,196,138,.2);
-    line-height:1;margin-bottom:1.5rem;
-  }
-  .pillar-title{
-    font-family:var(--serif);font-size:1.1rem;font-weight:400;
-    color:var(--star);margin-bottom:.75rem;
-  }
-  .pillar-desc{font-size:.82rem;color:var(--pale);opacity:.7;line-height:1.8}
-
-  /* ── PANORAMA ── */
-  #panorama{
-    background:var(--sky);padding:0;overflow:hidden;
-    position:relative;min-height:70vh;
-    display:flex;align-items:center;
-  }
-
-  .panorama-city{width:100%;display:block}
-
-  .panorama-overlay{
-    position:absolute;inset:0;
-    display:flex;flex-direction:column;
-    align-items:center;justify-content:center;
-    text-align:center;padding:2rem;
-    background:linear-gradient(to right,rgba(11,31,53,.7),rgba(11,31,53,.2),rgba(11,31,53,.7));
-  }
-  .panorama-overlay .section-title{font-size:clamp(1.5rem,4vw,2.8rem)}
-  .panorama-overlay p{
-    max-width:52ch;color:var(--pale);opacity:.8;
-    font-size:clamp(.8rem,1.4vw,.9rem);line-height:1.9;margin-bottom:2.5rem;
-  }
-
-  /* ── STATS ── */
-  #stats{background:var(--moss)}
-  .stats-grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-    gap:2px;margin-top:4rem;
-  }
-  .stat{
-    padding:3rem 2rem;text-align:center;
-    border:1px solid rgba(94,196,138,.1);
-  }
-  .stat-num{
-    font-family:var(--serif);font-size:clamp(2.5rem,5vw,3.5rem);
-    font-weight:300;color:var(--neon);line-height:1;margin-bottom:.5rem;
-  }
-  .stat-label{font-size:.65rem;letter-spacing:.25em;color:var(--pale);opacity:.6;text-transform:uppercase}
-
-  /* ── CTA ── */
-  #join{
-    background:var(--forest);text-align:center;
-    border-top:1px solid rgba(94,196,138,.1);
-  }
-
-  .btn-primary{
-    display:inline-block;
-    padding:1rem 3rem;
-    border:1px solid var(--neon);
-    color:var(--neon);font-size:.75rem;letter-spacing:.3em;
-    text-decoration:none;text-transform:uppercase;
-    transition:background .3s,color .3s;
-    margin-top:2.5rem;
-  }
-  .btn-primary:hover{background:var(--neon);color:var(--forest)}
-
-  .btn-outline{
-    display:inline-block;
-    padding:1rem 3rem;
-    border:1px solid rgba(94,196,138,.3);
-    color:var(--pale);font-size:.75rem;letter-spacing:.3em;
-    text-decoration:none;text-transform:uppercase;
-    transition:border-color .3s,color .3s;
-    margin-top:2.5rem;margin-left:1rem;
-  }
-  .btn-outline:hover{border-color:var(--neon);color:var(--neon)}
-
-  /* ── FOOTER ── */
-  footer{
-    background:rgba(0,0,0,.4);padding:2rem 4rem;
-    display:flex;align-items:center;justify-content:space-between;
-    flex-wrap:wrap;gap:1rem;
-    border-top:1px solid rgba(94,196,138,.08);
-    font-size:.65rem;letter-spacing:.15em;color:rgba(200,240,216,.4);
-  }
-
-  /* ── REVEAL ── */
-  [data-reveal]{opacity:0;transform:translateY(30px);transition:opacity .8s ease,transform .8s ease}
-  [data-reveal].vis{opacity:1;transform:none}
-</style>
-</head>
-<body>
-
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-circle"></div>
-  <p class="loader-text">PARADISE PROJECT を起動中</p>
-</div>
-
-<!-- NAV -->
-<nav>
-  <span class="nav-logo">PARADISE PROJECT</span>
-  <ul class="nav-links">
-    <li><a href="#manifest">マニフェスト</a></li>
-    <li><a href="#pillars">ビジョン</a></li>
-    <li><a href="#panorama">都市を見る</a></li>
-    <li><a href="#join">参加する</a></li>
-  </ul>
-</nav>
-
-<!-- HERO -->
-<section id="hero">
-  <!-- 背景：星空 + 有機的なライン -->
-  <svg class="hero-bg" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <rect width="1440" height="900" fill="#0d2918"/>
-    <!-- 星 -->
-    <g opacity=".7">
-      <circle cx="120" cy="80" r="1" fill="#c8f0d8"/><circle cx="300" cy="140" r="1.5" fill="#e8f5ff"/>
-      <circle cx="480" cy="60" r="1" fill="#c8f0d8"/><circle cx="650" cy="110" r="1" fill="#e8f5ff"/>
-      <circle cx="820" cy="45" r="1.5" fill="#c8f0d8"/><circle cx="990" cy="130" r="1" fill="#e8f5ff"/>
-      <circle cx="1160" cy="70" r="1" fill="#c8f0d8"/><circle cx="1320" cy="100" r="1.5" fill="#e8f5ff"/>
-      <circle cx="200" cy="200" r="1" fill="#e8f5ff"/><circle cx="560" cy="180" r="1" fill="#c8f0d8"/>
-      <circle cx="900" cy="190" r="1" fill="#e8f5ff"/><circle cx="1100" cy="160" r="1.5" fill="#c8f0d8"/>
-      <circle cx="400" cy="250" r="1" fill="#e8f5ff"/><circle cx="750" cy="230" r="1" fill="#c8f0d8"/>
-      <circle cx="1280" cy="220" r="1" fill="#e8f5ff"/>
-    </g>
-    <!-- 未来都市のシルエット -->
-    <g fill="#1a4a2e" opacity=".9">
-      <!-- 建物群 左 -->
-      <rect x="0" y="620" width="80" height="280"/>
-      <rect x="60" y="560" width="60" height="340"/>
-      <rect x="100" y="590" width="50" height="310"/>
-      <rect x="130" y="530" width="40" height="370"/>
-      <!-- 中央タワー -->
-      <polygon points="680,300 700,900 660,900" fill="#0d2918" opacity=".5"/>
-      <rect x="660" y="300" width="80" height="600"/>
-      <polygon points="700,260 720,300 680,300" fill="#1a4a2e"/>
-      <!-- 中央ツリー型タワー -->
-      <rect x="670" y="440" width="60" height="460"/>
-      <ellipse cx="700" cy="440" rx="45" ry="20" fill="#2d7a4a"/>
-      <ellipse cx="700" cy="400" rx="35" ry="16" fill="#2d7a4a"/>
-      <ellipse cx="700" cy="365" rx="25" ry="13" fill="#5ec48a" opacity=".6"/>
-      <!-- 建物群 右 -->
-      <rect x="1300" y="580" width="70" height="320"/>
-      <rect x="1250" y="540" width="60" height="360"/>
-      <rect x="1360" y="610" width="80" height="290"/>
-    </g>
-    <!-- 緑の層（木々）-->
-    <g>
-      <ellipse cx="160" cy="640" rx="80" ry="35" fill="#2d7a4a" opacity=".9"/>
-      <ellipse cx="300" cy="660" rx="100" ry="40" fill="#1a4a2e"/>
-      <ellipse cx="450" cy="650" rx="70" ry="30" fill="#2d7a4a" opacity=".8"/>
-      <ellipse cx="1000" cy="645" rx="90" ry="38" fill="#2d7a4a" opacity=".9"/>
-      <ellipse cx="1150" cy="660" rx="80" ry="35" fill="#1a4a2e"/>
-      <ellipse cx="1300" cy="640" rx="90" ry="36" fill="#2d7a4a" opacity=".8"/>
-    </g>
-    <!-- ネオングロウライン（川 / 光の道路） -->
-    <path d="M0,780 Q360,740 720,760 T1440,750" stroke="#00e8b0" stroke-width="1.5" fill="none" opacity=".3"/>
-    <path d="M0,800 Q360,770 720,785 T1440,775" stroke="#5ec48a" stroke-width=".5" fill="none" opacity=".2"/>
-    <!-- 光の粒 -->
-    <g fill="#00e8b0" opacity=".6">
-      <circle cx="200" cy="780" r="1.5"/><circle cx="420" cy="762" r="1"/>
-      <circle cx="640" cy="772" r="1.5"/><circle cx="860" cy="758" r="1"/>
-      <circle cx="1080" cy="768" r="1.5"/><circle cx="1300" cy="755" r="1"/>
-    </g>
-    <!-- オーロラ的グラデーション -->
-    <ellipse cx="720" cy="200" rx="500" ry="150" fill="#00e8b0" opacity=".04"/>
-    <ellipse cx="720" cy="250" rx="400" ry="120" fill="#5ec48a" opacity=".03"/>
-  </svg>
-
-  <div class="hero-content">
-    <p class="hero-eyebrow">PARADISE PROJECT</p>
-    <h1 class="hero-title">
-      自然とテクノロジーが<br>
-      <strong>溶け合う都市</strong>
-    </h1>
-    <p class="hero-sub">未来のパラダイスを、あなたの画面の向こうへ</p>
-    <a href="#manifest" class="hero-scroll">SCROLL<span class="scroll-bar"></span></a>
-  </div>
-</section>
-
-<!-- MANIFEST -->
-<section id="manifest">
-  <div class="container">
-    <div class="manifest-inner">
-      <!-- 都市イラストSVG -->
-      <div class="manifest-visual" data-reveal>
-        <svg class="city-canvas" viewBox="0 0 420 525" xmlns="http://www.w3.org/2000/svg">
-          <rect width="420" height="525" fill="#0d2918" rx="4"/>
-          <!-- 夜空 -->
-          <rect width="420" height="300" fill="#0b1f35"/>
-          <!-- 月 -->
-          <circle cx="340" cy="70" r="28" fill="#f5ead0" opacity=".9"/>
-          <circle cx="354" cy="62" r="22" fill="#0b1f35" opacity=".8"/>
-          <!-- 星 -->
-          <circle cx="60" cy="40" r="1" fill="#e8f5ff"/><circle cx="140" cy="25" r="1.5" fill="#e8f5ff"/>
-          <circle cx="220" cy="55" r="1" fill="#e8f5ff"/><circle cx="280" cy="30" r="1" fill="#e8f5ff"/>
-          <circle cx="100" cy="80" r="1" fill="#c8f0d8"/><circle cx="180" cy="90" r="1" fill="#c8f0d8"/>
-          <!-- 建物（左） -->
-          <rect x="20" y="200" width="55" height="200" fill="#1a4a2e"/>
-          <rect x="30" y="175" width="35" height="225" fill="#0d2918"/>
-          <!-- 窓の光 -->
-          <rect x="35" y="185" width="8" height="6" fill="#c8a84b" opacity=".8" rx="1"/>
-          <rect x="50" y="185" width="8" height="6" fill="#c8a84b" opacity=".5" rx="1"/>
-          <rect x="35" y="200" width="8" height="6" fill="#00e8b0" opacity=".6" rx="1"/>
-          <rect x="50" y="215" width="8" height="6" fill="#c8a84b" opacity=".7" rx="1"/>
-          <!-- 建物（中央・メインタワー）-->
-          <rect x="155" y="120" width="110" height="280" fill="#0d2918"/>
-          <rect x="170" y="100" width="80" height="300" fill="#1a4a2e"/>
-          <!-- タワー上部 三角 -->
-          <polygon points="210,70 240,100 180,100" fill="#2d7a4a"/>
-          <!-- ネオン頂点 -->
-          <circle cx="210" cy="68" r="4" fill="#00e8b0" opacity=".9"/>
-          <!-- タワー窓群 -->
-          <g fill="#00e8b0" opacity=".5">
-            <rect x="180" y="115" width="12" height="8" rx="1"/>
-            <rect x="200" y="115" width="12" height="8" rx="1"/>
-            <rect x="220" y="115" width="12" height="8" rx="1"/>
-            <rect x="180" y="132" width="12" height="8" rx="1"/>
-            <rect x="200" y="132" width="12" height="8" rx="1"/>
-            <rect x="220" y="132" width="12" height="8" rx="1"/>
-            <rect x="180" y="150" width="12" height="8" rx="1"/>
-            <rect x="220" y="150" width="12" height="8" rx="1"/>
-          </g>
-          <g fill="#c8a84b" opacity=".6">
-            <rect x="200" y="150" width="12" height="8" rx="1"/>
-            <rect x="180" y="170" width="12" height="8" rx="1"/>
-            <rect x="200" y="170" width="12" height="8" rx="1"/>
-            <rect x="220" y="170" width="12" height="8" rx="1"/>
-          </g>
-          <!-- 建物（右） -->
-          <rect x="300" y="210" width="70" height="190" fill="#1a4a2e"/>
-          <rect x="315" y="185" width="45" height="215" fill="#0d2918"/>
-          <rect x="320" y="195" width="8" height="6" fill="#00e8b0" opacity=".5" rx="1"/>
-          <rect x="335" y="195" width="8" height="6" fill="#c8a84b" opacity=".7" rx="1"/>
-          <rect x="320" y="212" width="8" height="6" fill="#c8a84b" opacity=".5" rx="1"/>
-          <!-- 緑（バーチカルガーデン）-->
-          <rect x="168" y="200" width="10" height="200" fill="#2d7a4a" opacity=".6"/>
-          <rect x="242" y="180" width="10" height="220" fill="#2d7a4a" opacity=".6"/>
-          <!-- 木々・地上 -->
-          <rect x="0" y="380" width="420" height="145" fill="#1a4a2e"/>
-          <ellipse cx="80" cy="385" rx="55" ry="28" fill="#2d7a4a"/>
-          <ellipse cx="80" cy="375" rx="42" ry="22" fill="#0d2918" opacity=".5"/>
-          <rect x="74" y="378" width="12" height="50" fill="#1a4a2e"/>
-          <ellipse cx="185" cy="390" rx="35" ry="18" fill="#5ec48a" opacity=".7"/>
-          <rect x="182" y="390" width="8" height="35" fill="#1a4a2e"/>
-          <ellipse cx="340" cy="382" rx="50" ry="25" fill="#2d7a4a"/>
-          <ellipse cx="340" cy="372" rx="38" ry="20" fill="#0d2918" opacity=".4"/>
-          <rect x="335" y="377" width="10" height="45" fill="#1a4a2e"/>
-          <!-- 光の川 -->
-          <path d="M0,460 Q105,445 210,455 T420,445" stroke="#00e8b0" stroke-width="1.5" fill="none" opacity=".4"/>
-          <path d="M0,475 Q105,462 210,470 T420,462" stroke="#5ec48a" stroke-width=".8" fill="none" opacity=".2"/>
-          <!-- フォグ -->
-          <rect x="0" y="370" width="420" height="30" fill="#1a4a2e" opacity=".5"/>
-        </svg>
+  return (
+    <div className="fce">
+      <style>{ss}</style>
+      <div className="header">
+        <div>
+          <div className="logo">
+            FUTURE CITY EXPLORER in 食事場
+            <span>// 未来都市探索システム v2.0</span>
+          </div>
+        </div>
+        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
+          <span className="counter">{cities.length} CITIES INDEXED</span>
+          <button className="add-btn" onClick={() => setShowAdd(true)}>+ 新都市を登録</button>
+        </div>
       </div>
 
-      <div class="manifest-text" data-reveal>
-        <p class="label">MANIFEST</p>
-        <h2 class="section-title">これは都市ではなく、<em>生態系</em>だ</h2>
-        <p>パラダイス計画は、コンクリートの密林ではなく、葉脈のように張り巡らされたテクノロジーと緑が共存する新しい都市モデルを提案します。</p>
-        <p>エネルギーは森から生まれ、建物は植物と対話し、AIは生命のリズムに合わせて動く。そこでは、人間も自然の一部として輝きます。</p>
-        <p>これはユートピアの夢物語ではありません。<br>今夜から始まる、設計図です。</p>
-        <blockquote class="manifest-quote">
-          「自然に反するテクノロジーは壊れる。<br>自然を模倣したテクノロジーは永遠に生き続ける。」
-        </blockquote>
+      <div className="grid">
+        {cities.map(city => (
+          <div key={city.id} className="card" onClick={() => setActive(city)}
+            style={{ borderColor: `${city.a1}25` }}>
+            <div className="card-scene"><CityScene city={city} /></div>
+            <div className="card-overlay" />
+            <div className="corner tl" style={{ borderColor: city.a1 + "80" }} />
+            <div className="corner tr" style={{ borderColor: city.a1 + "80" }} />
+            <div className="corner bl" style={{ borderColor: city.a1 + "80" }} />
+            <div className="corner br" style={{ borderColor: city.a1 + "80" }} />
+            <div className="card-info">
+              <div className="card-name" style={{ color: city.a1 }}>{city.name}</div>
+              <div className="card-meta">{city.location}</div>
+            </div>
+            {city.scene === "custom" && (
+              <div className="card-del" onClick={e => { e.stopPropagation(); removeCity(city.id); }}>✕</div>
+            )}
+          </div>
+        ))}
+
+        <div className="card" style={{ border: "1px dashed rgba(0,245,255,0.2)", cursor: "pointer", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: 12 }}
+          onClick={() => setShowAdd(true)}>
+          <div style={{ fontSize: 32, color: "rgba(0,245,255,0.3)" }}>+</div>
+          <div style={{ fontSize: 11, letterSpacing: 3, color: "rgba(0,245,255,0.4)" }}>新しい未来都市を追加</div>
+        </div>
       </div>
+
+      {showAdd && (
+        <div className="modal-bg" onClick={e => e.target === e.currentTarget && setShowAdd(false)}>
+          <div className="modal">
+            <h2>// 新都市データを登録</h2>
+
+            <div className="field">
+              <label>都市名 *</label>
+              <input placeholder="例：ネオ大阪、月面コロニーα" value={form.name}
+                onChange={e => setForm(f => ({ ...f, name: e.target.value }))} />
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr", gap: 16 }}>
+              <div className="field">
+                <label>場所 / 座標</label>
+                <input placeholder="例：火星 / 北緯45°" value={form.location}
+                  onChange={e => setForm(f => ({ ...f, location: e.target.value }))} />
+              </div>
+            </div>
+            <div className="field">
+              <label>都市の説明</label>
+              <textarea placeholder="この都市の特徴、技術、文化について..." value={form.description}
+                onChange={e => setForm(f => ({ ...f, description: e.target.value }))} />
+            </div>
+            <div className="field">
+              <label>主要テクノロジー（1行に1つ）</label>
+              <textarea placeholder={"核融合発電\n量子コンピュータ\nナノマシン医療"} value={form.features}
+                onChange={e => setForm(f => ({ ...f, features: e.target.value }))} style={{ minHeight: 90 }} />
+            </div>
+            <div className="field">
+              <label>ビジュアルテーマ</label>
+              <div className="theme-swatches">
+                {THEMES.map((t, i) => (
+                  <div key={i} className={`swatch${form.themeIdx === i ? " active" : ""}`}
+                    style={{ background: t.bg, borderColor: form.themeIdx === i ? t.a1 : "transparent" }}
+                    onClick={() => setForm(f => ({ ...f, themeIdx: i }))}>
+                    <div style={{ width: 14, height: 4, background: t.a1, borderRadius: 2 }} />
+                    <div style={{ width: 10, height: 3, background: t.a2, borderRadius: 2 }} />
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="modal-btns">
+              <button className="btn-cancel" onClick={() => setShowAdd(false)}>キャンセル</button>
+              <button className="btn-save" onClick={saveCity}>// 都市を登録する</button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
-  </div>
-</section>
-
-<!-- PILLARS -->
-<section id="pillars">
-  <div class="container">
-    <div data-reveal>
-      <p class="label">VISION PILLARS</p>
-      <h2 class="section-title">未来を支える<em>四つの柱</em></h2>
-    </div>
-    <div class="pillars-grid">
-      <article class="pillar" data-reveal>
-        <p class="pillar-num">01</p>
-        <h3 class="pillar-title">バイオテック・アーキテクチャ</h3>
-        <p class="pillar-desc">菌糸ネットワークを模倣した建築構造が、建物間でエネルギーと情報を共有。生きている都市インフラを実現します。</p>
-      </article>
-      <article class="pillar" data-reveal>
-        <p class="pillar-num">02</p>
-        <h3 class="pillar-title">ヴァーティカル・フォレスト</h3>
-        <p class="pillar-desc">高層ビルの外壁を覆う垂直の森。都市内で完結するカーボンサイクルを形成し、気候を内側から調節します。</p>
-      </article>
-      <article class="pillar" data-reveal>
-        <p class="pillar-num">03</p>
-        <h3 class="pillar-title">共感型AI都市管理</h3>
-        <p class="pillar-desc">住民の生活リズム、気候、生態系データをリアルタイムで統合する都市AIが、命令ではなく提案で都市を運営します。</p>
-      </article>
-      <article class="pillar" data-reveal>
-        <p class="pillar-num">04</p>
-        <h3 class="pillar-title">循環型エネルギー</h3>
-        <p class="pillar-desc">太陽・風・雨・生物熱という自然のエネルギーを完全活用。消費せず、還元し続けるエネルギー設計。</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- PANORAMA -->
-<section id="panorama">
-  <!-- パノラマ都市SVG -->
-  <svg class="panorama-city" viewBox="0 0 1440 500" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#0b1f35"/>
-        <stop offset="100%" stop-color="#0d2918"/>
-      </linearGradient>
-    </defs>
-    <rect width="1440" height="500" fill="url(#skyGrad)"/>
-
-    <!-- 遠景 山脈 -->
-    <polygon points="0,300 100,200 200,240 300,160 420,230 550,180 660,220 780,150 900,195 1020,170 1140,210 1260,175 1380,215 1440,200 1440,500 0,500" fill="#0d2918" opacity=".8"/>
-
-    <!-- 中景 建物群 -->
-    <g fill="#1a4a2e">
-      <rect x="50" y="280" width="70" height="220"/><rect x="80" y="240" width="50" height="260"/>
-      <rect x="160" y="260" width="65" height="240"/><rect x="210" y="220" width="45" height="280"/>
-      <rect x="280" y="250" width="80" height="250"/><rect x="340" y="200" width="55" height="300"/>
-      <!-- 中央タワーペア -->
-      <rect x="580" y="180" width="90" height="320"/><rect x="650" y="150" width="70" height="350"/>
-      <polygon points="615,150 685,150 650,100" fill="#2d7a4a"/>
-      <rect x="760" y="170" width="85" height="330"/><rect x="820" y="140" width="60" height="360"/>
-      <polygon points="760,140 820,140 790,90" fill="#2d7a4a"/>
-      <rect x="1000" y="260" width="75" height="240"/><rect x="1060" y="220" width="55" height="280"/>
-      <rect x="1160" y="270" width="80" height="230"/><rect x="1220" y="240" width="60" height="260"/>
-      <rect x="1340" y="280" width="70" height="220"/><rect x="1380" y="250" width="50" height="250"/>
-    </g>
-
-    <!-- ネオン光（窓） -->
-    <g fill="#00e8b0" opacity=".5">
-      <rect x="90" y="255" width="10" height="7" rx="1"/><rect x="108" y="255" width="10" height="7" rx="1"/>
-      <rect x="168" y="270" width="10" height="7" rx="1"/><rect x="215" y="230" width="10" height="7" rx="1"/>
-      <rect x="600" y="195" width="12" height="8" rx="1"/><rect x="620" y="195" width="12" height="8" rx="1"/>
-      <rect x="660" y="165" width="12" height="8" rx="1"/><rect x="680" y="165" width="12" height="8" rx="1"/>
-      <rect x="770" y="185" width="12" height="8" rx="1"/><rect x="790" y="185" width="12" height="8" rx="1"/>
-      <rect x="830" y="155" width="12" height="8" rx="1"/><rect x="850" y="155" width="12" height="8" rx="1"/>
-      <rect x="1010" y="275" width="10" height="7" rx="1"/><rect x="1070" y="235" width="10" height="7" rx="1"/>
-    </g>
-    <g fill="#c8a84b" opacity=".6">
-      <rect x="90" y="272" width="10" height="7" rx="1"/><rect x="220" y="248" width="10" height="7" rx="1"/>
-      <rect x="600" y="215" width="12" height="8" rx="1"/><rect x="665" y="185" width="12" height="8" rx="1"/>
-      <rect x="835" y="175" width="12" height="8" rx="1"/>
-    </g>
-
-    <!-- 緑の帯（ヴァーティカルガーデン） -->
-    <rect x="578" y="200" width="12" height="300" fill="#2d7a4a" opacity=".8"/>
-    <rect x="758" y="190" width="12" height="310" fill="#2d7a4a" opacity=".8"/>
-
-    <!-- 前景 木々 -->
-    <ellipse cx="150" cy="430" rx="100" ry="45" fill="#2d7a4a"/>
-    <ellipse cx="150" cy="415" rx="80" ry="36" fill="#1a4a2e"/>
-    <ellipse cx="440" cy="440" rx="80" ry="38" fill="#2d7a4a" opacity=".9"/>
-    <ellipse cx="720" cy="445" rx="60" ry="30" fill="#5ec48a" opacity=".6"/>
-    <ellipse cx="1000" cy="435" rx="90" ry="40" fill="#2d7a4a"/>
-    <ellipse cx="1300" cy="440" rx="85" ry="38" fill="#2d7a4a" opacity=".9"/>
-    <ellipse cx="1420" cy="448" rx="60" ry="28" fill="#1a4a2e"/>
-
-    <!-- 光の川 -->
-    <path d="M0,475 Q360,455 720,465 T1440,455" stroke="#00e8b0" stroke-width="2" fill="none" opacity=".35"/>
-    <path d="M0,488 Q360,470 720,480 T1440,470" stroke="#5ec48a" stroke-width="1" fill="none" opacity=".18"/>
-    <!-- 反射 -->
-    <g fill="#00e8b0" opacity=".4">
-      <circle cx="180" cy="476" r="1.5"/><circle cx="400" cy="460" r="1"/>
-      <circle cx="720" cy="466" r="2"/><circle cx="960" cy="458" r="1.5"/>
-      <circle cx="1200" cy="462" r="1"/>
-    </g>
-
-    <!-- オーロラ -->
-    <ellipse cx="720" cy="180" rx="450" ry="80" fill="#00e8b0" opacity=".04"/>
-    <ellipse cx="720" cy="200" rx="350" ry="60" fill="#5ec48a" opacity=".03"/>
-  </svg>
-
-  <div class="panorama-overlay">
-    <p class="label" style="justify-content:center">CITYSCAPE</p>
-    <h2 class="section-title">窓の外に広がる<br><em>緑と光の首都</em></h2>
-    <p>夜になると、ネオンの輝きと生命の緑が混ざり合い、見たことのない色彩が都市を包む。ここはまだ地図にない場所。でも、確かに在る未来。</p>
-    <a href="#join" class="btn-primary">入居申請を始める</a>
-  </div>
-</section>
-
-<!-- STATS -->
-<section id="stats">
-  <div class="container">
-    <div data-reveal>
-      <p class="label">BY THE NUMBERS</p>
-      <h2 class="section-title"><em>数字</em>で見るパラダイス</h2>
-    </div>
-    <div class="stats-grid">
-      <div class="stat" data-reveal>
-        <p class="stat-num">87%</p>
-        <p class="stat-label">再生可能エネルギー率</p>
-      </div>
-      <div class="stat" data-reveal>
-        <p class="stat-num">3.2M</p>
-        <p class="stat-label">都市内樹木本数</p>
-      </div>
-      <div class="stat" data-reveal>
-        <p class="stat-num">−62%</p>
-        <p class="stat-label">CO₂排出削減</p>
-      </div>
-      <div class="stat" data-reveal>
-        <p class="stat-num">2041</p>
-        <p class="stat-label">完成予定年</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- JOIN CTA -->
-<section id="join">
-  <div class="container" data-reveal>
-    <p class="label" style="justify-content:center">JOIN THE FUTURE</p>
-    <h2 class="section-title" style="text-align:center">あなたも、<em>パラダイス</em>へ</h2>
-    <p style="text-align:center;max-width:50ch;margin:0 auto;color:var(--pale);opacity:.7;font-size:.88rem;line-height:1.9">
-      住民枠は限られています。ニュースレターに登録して、計画の最新情報と入居申請の優先権を手に入れてください。
-    </p>
-    <div style="text-align:center">
-      <a href="#" class="btn-primary">ニュースレター登録</a>
-      <a href="#manifest" class="btn-outline">もっと学ぶ</a>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer>
-  <span>© 2041 PARADISE PROJECT — ALL RIGHTS RESERVED</span>
-  <span>自然 × テクノロジー × 未来</span>
-</footer>
-
-<script>
-  // Loader
-  window.addEventListener('load',()=>{
-    setTimeout(()=>{
-      document.getElementById('loader').classList.add('out');
-    },1400);
-  });
-
-  // Reveal on scroll
-  const els=document.querySelectorAll('[data-reveal]');
-  const obs=new IntersectionObserver(entries=>{
-    entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');obs.unobserve(e.target);}});
-  },{threshold:.1});
-  els.forEach(el=>obs.observe(el));
-</script>
-</body>
-</html>
+  );
+}
